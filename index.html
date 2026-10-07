@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Mobile-first: viewport meta zaroori hai -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Browser ke address bar ka colour -->
+  <meta name="theme-color" content="#2B2D6E" />
+  <!-- SEO ke liye chhota description -->
+  <meta name="description" content="Near-U - Gaya ke local business dhoondhne ka sabse aasan tareeka. Dukaan, doctor, tuition, restaurant - sab ek tap door." />
+  <title>Near-U - Gaya ki local dukaan</title>
+
+  <!-- Google Fonts: Poppins headings ke liye, Inter body ke liye -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Apni CSS file -->
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Chhota inline CSS: sirf naye i18n/auth/photo elements ke liye -->
+  <style>
+    /* ---------- Language switcher (header) ---------- */
+    .nu-lang {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: nowrap;
+      max-width: 100%;
+    }
+    .nu-lang .lang-btn {
+      font-family: inherit;
+      font-size: 0.68rem;
+      font-weight: 600;
+      line-height: 1;
+      padding: 6px 9px;
+      min-height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(43, 45, 110, 0.25);
+      background: #ffffff;
+      color: #2B2D6E;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+      transition: background-color .16s ease, color .16s ease, border-color .16s ease;
+    }
+    .nu-lang .lang-btn:hover { background: #FFF9F3; }
+    .nu-lang .lang-btn.active {
+      background: #2B2D6E;
+      color: #ffffff;
+      border-color: #2B2D6E;
+    }
+    .nu-lang .lang-btn:focus-visible {
+      outline: 2px solid #2B2D6E;
+      outline-offset: 2px;
+    }
+    @media (max-width: 400px) {
+      .nu-lang .lang-btn {
+        font-size: 0.62rem;
+        padding: 5px 7px;
+        min-height: 28px;
+      }
+    }
+
+    /* ---------- Google login button + separator ---------- */
+    .auth-google {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 16px;
+      margin-bottom: 4px;
+      border: 2px solid #EFE7DD;
+      border-radius: 999px;
+      background: #FFFFFF;
+      color: #1F2140;
+      font-family: inherit;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.16s ease, border-color 0.16s ease;
+    }
+    .auth-google:hover { background: #FFF9F3; border-color: #6B6F8D; }
+    .auth-google:active { transform: scale(0.98); }
+    .auth-google svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+    .auth-sep {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0;
+      color: #6B6F8D;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .auth-sep::before,
+    .auth-sep::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #EFE7DD;
+    }
+
+    /* ---------- Forgot password link ---------- */
+    .forgot-link {
+      display: inline-block;
+      margin: 8px 0 2px;
+      background: none;
+      border: none;
+      padding: 4px 0;
+      color: #2B2D6E;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .forgot-link:hover { color: #FF6B2C; }
+
+    /* ---------- Delete account button ---------- */
+    .btn-danger {
+      background: #FBE9E7;
+      color: #C0392B;
+      border-color: #FBE9E7;
+    }
+    .btn-danger:hover {
+      background: #C0392B;
+      color: #FFFFFF;
+      border-color: #C0392B;
+    }
+    .btn-danger:active { transform: scale(0.97); }
+
+    /* ---------- Photo upload (Add/Edit Business form) ---------- */
+    .biz-photo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .biz-photo-preview {
+      width: 72px;
+      height: 72px;
+      flex: 0 0 auto;
+      border-radius: 14px;
+      border: 2px dashed #EFE7DD;
+      background: #FFF9F3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #6B6F8D;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+    .biz-photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .biz-photo-actions {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .biz-photo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 0 14px;
+      border: 2px solid #EFE7DD;
+      border-radius: 999px;
+      background: #FFFFFF;
+      color: #2B2D6E;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.16s ease, border-color 0.16s ease;
+    }
+    .biz-photo-btn:hover { background: #FFF9F3; border-color: #6B6F8D; }
+    .biz-photo-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .biz-photo-status {
+      font-size: 0.74rem;
+      color: #6B6F8D;
+      min-height: 14px;
+      margin: 0;
+    }
+    .biz-photo-status.error { color: #C0392B; }
+    .biz-photo-status.success { color: #1E8E4E; }
+
+    /* ---------- Card photo (business card image) ---------- */
+    .card-photo {
+      width: 100%;
+      height: 118px;
+      object-fit: cover;
+      display: block;
+      background: linear-gradient(135deg, #EEF0FF 0%, #FFE9DE 100%);
+    }
+  </style>
+
+  <!-- Supabase library (pehle load honi chahiye) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <!-- i18n layer (app.js se pehle chalni chahiye) -->
+  <script src="js/i18n.js" defer></script>
+  <!-- Apni app.js (Supabase ke baad chalti hai kyunki dono defer hain) -->
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <!-- Sticky header: do row - upar compact topbar, neeche search row -->
+  <header class="site-header" id="siteHeader">
+
+    <!-- Row 1: logo + chhote gol icon buttons -->
+    <div class="header-inner">
+      <a class="logo" href="#hero">Near-<span class="logo-u">U</span></a>
+
+      <div class="header-actions">
+        <!-- Admin gear: sirf admin user ko dikhega (JS isko unhide karta hai) -->
+        <a class="icon-btn" id="adminHeaderLink" href="admin.html" hidden aria-label="Admin panel" data-i18n-title="admin_panel">
+          <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01A1.65 1.65 0 0 0 20.91 10H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </a>
+
+        <!-- Language switcher: i18n.js isko 3 chhote buttons se bhar deta hai -->
+        <div id="nuLang" class="nu-lang" data-i18n-title="language"></div>
+
+        <!-- Login/user button: login hone par user icon + naam (JS isko badalta hai) -->
+        <button class="icon-btn" id="loginBtn" type="button" aria-label="Login" data-i18n-title="login">
+          <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
+          </svg>
+          <span data-i18n="login">Login</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 2: full-width search bar + Categories button -->
+    <div class="topbar-search">
+      <div class="search-row">
+        <!-- Search bar: white pill, andar magnifier icon + input + orange button -->
+        <div class="search-bar">
+          <!-- Magnifier SVG icon -->
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="16.5" y1="16.5" x2="21" y2="21"></line>
+          </svg>
+          <label class="sr-only" for="searchInput">Search karo</label>
+          <input class="search-input" id="searchInput" type="text" autocomplete="off" spellcheck="false" placeholder="Search karo: pen" data-i18n-placeholder="search_placeholder" />
+          <button class="btn btn-search" id="searchBtn" type="button" data-i18n="search_button">Search</button>
+        </div>
+
+        <!-- Categories button: chhota grid icon (inline SVG) + "Categories" -->
+        <button class="btn nu-cat-open" id="nuCatOpen" type="button" aria-haspopup="true" aria-expanded="false">
+          <svg class="nu-cat-open-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+          <span data-i18n="categories">Categories</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ HERO ============ -->
+  <!-- Indigo gradient wala bada box, sirf heading/subtext (search bar ab header mein) -->
+  <section class="hero reveal" id="hero">
+    <!-- Teen gol decorative circles (sirf design ke liye) -->
+    <span class="hero-circle hero-circle-1" aria-hidden="true"></span>
+    <span class="hero-circle hero-circle-2" aria-hidden="true"></span>
+    <span class="hero-circle hero-circle-3" aria-hidden="true"></span>
+
+    <div class="hero-inner">
+      <p class="hero-tagline">Apna Gaya, apni dukaan</p>
+      <h1 class="hero-title">Gaya ki har dukaan, <span class="hl">ab ek tap door</span></h1>
+      <p class="hero-sub">Dukaan, doctor, tuition, restaurant - sab kuch ek jagah.</p>
+    </div>
+  </section>
+
+  <!-- ============ TRENDING / LISTINGS ============ -->
+  <!-- Yahan pehle skeleton cards dikhte hain, phir real/sample cards -->
+  <section class="section reveal" id="trending">
+    <div class="container">
+      <div class="nu-cat-trending-head">
+        <h2 class="section-title" id="trendingTitle">Gaya mein abhi trending</h2>
+        <!-- "Sab dikhao" button: sirf tab dikhega jab category filter active ho -->
+        <button class="nu-cat-clear" id="nuCatClear" type="button" hidden>Sab dikhao</button>
+      </div>
+      <p class="section-sub" id="trendingSub">Ye sample listings hain - asli data jald aayega.</p>
+
+      <div class="trending-list" id="trendingList"></div>
+
+      <p class="no-results" id="noResults" hidden data-i18n="no_results">Kuch nahi mila, kuch aur try karo</p>
+    </div>
+  </section>
+
+  <!-- ============ OWNER BANNER ============ -->
+  <!-- Business owners ke liye orange call-to-action box -->
+  <section class="section reveal" id="owner">
+    <div class="container">
+      <div class="owner-banner" id="ownerBanner">
+        <h2 class="owner-title">Apni dukaan ki free mini-website banao</h2>
+        <p class="owner-sub">Naam, photo aur number - bas itna daalo, Gaya ke log aapko dhoondh lenge.</p>
+        <button class="btn btn-white" id="listBusinessBtn" type="button">Free mein listing karo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <p class="footer-logo">Near-<span class="logo-u">U</span></p>
+    <p class="footer-text">Gaya ke local business dhoondhne ka sabse aasan tareeka.</p>
+    <p class="footer-copy">© 2026 Near-U. All rights reserved.</p>
+  </footer>
+
+  <!-- ============ BOTTOM NAV (app-style, har size par) ============ -->
+  <nav class="bottom-nav" aria-label="Bottom navigation">
+    <button class="bottom-nav-item active" type="button" data-nav="home">
+      <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 10.5 12 3l9 7.5"></path>
+        <path d="M5 9.5V21h14V9.5"></path>
+      </svg>
+      <span data-i18n="home">Home</span>
+    </button>
+
+    <button class="bottom-nav-item" type="button" data-nav="categories">
+      <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+        <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+        <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+        <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+      </svg>
+      <span data-i18n="categories">Categories</span>
+    </button>
+
+    <button class="bottom-nav-item" type="button" data-nav="business">
+      <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3" y="7" width="18" height="13" rx="2"></rect>
+        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <path d="M3 12h18"></path>
+      </svg>
+      <span>Mera Business</span>
+    </button>
+
+    <button class="bottom-nav-item" type="button" data-nav="profile">
+      <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="8" r="4"></circle>
+        <path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path>
+      </svg>
+      <span data-i18n="profile">Profile</span>
+    </button>
+  </nav>
+
+  <!-- ============ CATEGORIES PANEL ============ -->
+  <!-- Mobile: bottom sheet | Desktop: dropdown popover (CSS se switch) -->
+  <div class="nu-cat-panel" id="nuCatPanel" hidden>
+    <!-- Dim overlay: tap karne par band -->
+    <div class="nu-cat-overlay" id="nuCatOverlay"></div>
+    <!-- Sheet/popover body -->
+    <div class="nu-cat-sheet" id="nuCatSheet" role="dialog" aria-modal="true" aria-labelledby="nuCatTitle">
+      <div class="nu-cat-head">
+        <h3 class="nu-cat-title" id="nuCatTitle" data-i18n="categories">Categories</h3>
+        <button class="nu-cat-close" id="nuCatClose" type="button" aria-label="Band karo" data-i18n-title="close">×</button>
+      </div>
+      <div class="nu-cat-grid" id="nuCatGrid"></div>
+    </div>
+  </div>
+
+  <!-- ============ AUTH MODAL ============ -->
+  <!-- Login / Signup ka popup -->
+  <div class="modal" id="authModal" hidden role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <div class="modal-backdrop" id="authBackdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close" id="authClose" type="button" aria-label="Band karo" data-i18n-title="close">×</button>
+
+      <!-- Form view: login ya signup -->
+      <div id="authFormView">
+        <h2 class="modal-title" id="authTitle">Near-U mein login karo</h2>
+        <p class="modal-sub" id="authSub">Apna business add karne ke liye account chahiye.</p>
+
+        <!-- Google login button -->
+        <button class="auth-google" id="googleLoginBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.1a6.6 6.6 0 0 1 0-4.2V7.06H2.18a11 11 0 0 0 0 9.88l3.66-2.84z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z"/>
+          </svg>
+          <span data-i18n="google_login">Continue with Google</span>
+        </button>
+
+        <div class="auth-sep"><span data-i18n="or_separator">ya</span></div>
+
+        <!-- Segmented tabs: Login / Naya account -->
+        <div class="auth-tabs" role="tablist">
+          <button class="auth-tab active" id="tabLogin" type="button" role="tab" aria-selected="true" data-i18n="login">Login</button>
+          <button class="auth-tab" id="tabSignup" type="button" role="tab" aria-selected="false" data-i18n="signup">Naya account</button>
+        </div>
+
+        <form id="authForm" novalidate>
+          <label class="field-label" for="authEmail" data-i18n="email">Email</label>
+          <input class="field-input" id="authEmail" type="email" inputmode="email" autocomplete="email" placeholder="aap@example.com" data-i18n-placeholder="email" />
+          <!-- Email ke neeche hint: typo ya galat format par JS yahan message dikhata hai -->
+          <p class="auth-msg error" id="authEmailHint" hidden></p>
+
+          <label class="field-label" for="authPassword" data-i18n="password">Password</label>
+          <div class="password-wrap">
+            <input class="field-input" id="authPassword" type="password" autocomplete="current-password" placeholder="Kam se kam 6 akshar" data-i18n-placeholder="password" />
+            <!-- Eye icon button: default khuli aankh (SVG), click par band aankh ho jati hai -->
+            <button class="toggle-password" id="togglePassword" type="button" aria-label="Password dikhao" data-i18n-title="password">
+              <span class="eye-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1.5 12s3.8-7 10.5-7 10.5 7 10.5 7-3.8 7-10.5 7S1.5 12 1.5 12z"></path>
+                  <circle cx="12" cy="12" r="3.2"></circle>
+                </svg>
+              </span>
+            </button>
+          </div>
+
+          <!-- Forgot password link (sirf login mode me dikhta hai) -->
+          <button class="forgot-link" id="forgotPasswordBtn" type="button" data-i18n="forgot_password">Forgot password?</button>
+
+          <p class="auth-msg" id="authMsg" role="alert" hidden></p>
+
+          <button class="btn btn-search btn-block" id="authSubmit" type="submit">Login karo</button>
+        </form>
+      </div>
+
+      <!-- Account view: jab user already logged in ho -->
+      <div id="accountView" hidden>
+        <h2 class="modal-title" data-i18n="profile_title">Aapka account</h2>
+        <p class="modal-sub" data-i18n="profile_email_label">Aap is email se login ho:</p>
+        <p class="account-email" id="accountEmail"></p>
+        <!-- Admin panel link: sirf admin user ko dikhega (JS isko unhide karta hai) -->
+        <a class="btn btn-search btn-block nu-btn-ico" id="adminAccountLink" href="admin.html" hidden>
+          <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1.08-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1.08 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01A1.65 1.65 0 0 0 20.91 10H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          <span data-i18n="admin_open">Admin panel kholo</span>
+        </a>
+        <button class="btn btn-outline btn-block" id="logoutBtn" type="button" data-i18n="logout">Logout</button>
+        <button class="btn btn-danger btn-block" id="deleteAccountBtn" type="button" data-i18n="delete_account">Delete account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ BUSINESS MODAL ============ -->
+  <!-- Business add karne ka popup (4 views: loading, form, done, status) -->
+  <div class="modal" id="businessModal" hidden role="dialog" aria-modal="true" aria-labelledby="biz-form-title">
+    <div class="modal-backdrop" id="bizBackdrop"></div>
+    <div class="modal-card modal-card-wide">
+      <button class="modal-close" id="bizClose" type="button" aria-label="Band karo" data-i18n-title="close">×</button>
+
+      <!-- 1) Loading view -->
+      <div id="bizLoadingView" hidden>
+        <p class="modal-sub" data-i18n="loading">Ruko, check kar rahe hain...</p>
+      </div>
+
+      <!-- 2) Form view -->
+      <div id="bizFormView" hidden>
+        <h2 class="modal-title" id="biz-form-title" data-i18n="add_business">Apna business add karo</h2>
+        <p class="modal-sub">Bas kuch details bharo. Hum check karke Near-U pe publish kar denge.</p>
+
+        <form id="bizForm" novalidate>
+          <label class="field-label" for="bizName"><span data-i18n="business_name">Business ka naam</span> *</label>
+          <input class="field-input" id="bizName" type="text" maxlength="60" autocomplete="organization" placeholder="jaise Sharma Stationery" />
+
+          <!-- Photo upload (optional) -->
+          <label class="field-label"><span data-i18n="photo">Photo</span></label>
+          <div class="biz-photo-wrap">
+            <div class="biz-photo-preview" id="bizPhotoPreview" role="button" tabindex="0" data-i18n-title="add_photo">
+              <span data-i18n="add_photo">Add photo</span>
+            </div>
+            <div class="biz-photo-actions">
+              <button type="button" class="biz-photo-btn" id="bizPhotoPick" data-i18n="add_photo">Add photo</button>
+              <button type="button" class="biz-photo-btn" id="bizPhotoRemove" hidden data-i18n="remove_photo">Remove photo</button>
+              <p class="biz-photo-status" id="bizPhotoStatus"></p>
+            </div>
+          </div>
+          <input type="file" id="bizPhotoInput" accept="image/*" hidden />
+
+          <label class="field-label" for="bizCategory"><span data-i18n="category">Category</span> *</label>
+          <select class="field-input" id="bizCategory">
+            <option value="">Category chuno</option>
+          </select>
+
+          <label class="field-label" for="bizArea"><span data-i18n="area">Area</span> *</label>
+          <input class="field-input" id="bizArea" type="text" maxlength="40" placeholder="jaise Station Road" />
+
+          <label class="field-label" for="bizAddress" data-i18n="address">Pura address (optional)</label>
+          <input class="field-input" id="bizAddress" type="text" maxlength="120" autocomplete="street-address" placeholder="Dukaan number, gali, landmark" />
+
+          <label class="field-label" for="bizAbout" data-i18n="about">Business ke baare mein (optional)</label>
+          <textarea class="field-input field-textarea" id="bizAbout" maxlength="300" rows="3" placeholder="Aap kya bechte ho ya kya service dete ho?"></textarea>
+          <p class="field-hint" id="bizAboutCount">0/300</p>
+
+          <label class="field-label" for="bizPhone"><span data-i18n="phone">Phone number</span> *</label>
+          <input class="field-input" id="bizPhone" type="tel" inputmode="numeric" maxlength="15" autocomplete="tel" placeholder="10 digit mobile number" />
+          <p class="field-hint">Customer isi number pe call karenge.</p>
+
+          <label class="field-label" for="bizWhatsapp" data-i18n="whatsapp_number">WhatsApp number (optional)</label>
+          <input class="field-input" id="bizWhatsapp" type="tel" inputmode="numeric" maxlength="15" placeholder="10 digit number" />
+          <p class="field-hint">Khali chhodo to phone number hi use hoga.</p>
+
+          <!-- ===== Timings (optional) ===== -->
+          <p style="margin-top:20px;margin-bottom:8px;font-size:0.76rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6F8D;">Timings</p>
+
+          <div style="display:flex;gap:10px;">
+            <div style="flex:1;min-width:0;">
+              <label class="field-label" for="biz-opening" style="margin-top:0;" data-i18n="opening_time">Khulne ka time</label>
+              <input class="field-input" id="biz-opening" type="time" />
+            </div>
+            <div style="flex:1;min-width:0;">
+              <label class="field-label" for="biz-closing" style="margin-top:0;" data-i18n="closing_time">Band hone ka time</label>
+              <input class="field-input" id="biz-closing" type="time" />
+            </div>
+          </div>
+
+          <label class="field-label" for="biz-weekly-off" data-i18n="weekly_off">Weekly off</label>
+          <select class="field-input" id="biz-weekly-off">
+            <option value="">Koi off nahi</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+          </select>
+
+          <!-- ===== Services / Products (optional) ===== -->
+          <p style="margin-top:20px;margin-bottom:8px;font-size:0.76rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6F8D;" data-i18n="services">Services</p>
+
+          <label class="field-label" for="biz-services" style="margin-top:0;">Services / products</label>
+          <textarea class="field-input field-textarea" id="biz-services" maxlength="300" rows="3" placeholder="Comma se alag karo, jaise: Pen, Notebook, Xerox"></textarea>
+
+          <!-- ===== Links (optional, dynamic) ===== -->
+          <p style="margin-top:20px;margin-bottom:8px;font-size:0.76rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#6B6F8D;">Links</p>
+          <p class="field-hint" style="margin-top:0;">Instagram, Facebook, YouTube, Telegram ya koi bhi link jodein</p>
+
+          <div id="biz-links-list"></div>
+
+          <button type="button" id="biz-add-link" class="biz-add-link-btn">
+            <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Link jodein</span>
+          </button>
+
+          <p class="auth-msg" id="bizMsg" role="alert" hidden></p>
+
+          <button class="btn btn-search btn-block" id="bizSubmit" type="submit">
+            <span id="biz-submit-label">Submit karo</span>
+          </button>
+          <button type="button" id="biz-edit-cancel" class="btn btn-outline btn-block" hidden data-i18n="cancel">Wapas jayein</button>
+        </form>
+      </div>
+
+      <!-- 3) Done view: submit ke baad thank you -->
+      <div id="bizDoneView" hidden>
+        <p class="done-emoji" aria-hidden="true">
+          <span class="done-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="5 12.5 10 17.5 19 7"></polyline>
+            </svg>
+          </span>
+        </p>
+        <h2 class="modal-title">Shukriya! Aapka business mil gaya</h2>
+        <p class="done-text">Hamari team aapki details check kar rahi hai. Aapka business <strong>24 ghante ke andar</strong> Near-U pe publish ho jayega.</p>
+        <p class="done-small" data-i18n="pending_msg">Your business will be published within 24 hours.</p>
+        <p class="done-small">Publish hote hi Gaya ke log aapko dhoondh payenge.</p>
+        <button class="btn btn-outline btn-block" id="bizDoneBtn" type="button" data-i18n="got_it">Theek hai</button>
+      </div>
+
+      <!-- 4) Status view: agar business pehle se hai -->
+      <div id="bizStatusView" hidden>
+        <h2 class="modal-title">Aapka business</h2>
+        <p class="biz-status-name" id="bizStatusName"></p>
+        <span class="status-pill" id="bizStatusPill"></span>
+        <p class="modal-sub" id="bizStatusText"></p>
+        <button type="button" id="edit-business-btn" class="btn btn-outline btn-block" hidden>
+          <svg class="nu-ico" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+          </svg>
+          <span data-i18n="edit_business">Business edit karein</span>
+        </button>
+        <button class="btn btn-outline btn-block" id="bizStatusCloseBtn" type="button" data-i18n="got_it">Theek hai</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ UPDATES MODAL ============ -->
+  <div class="modal" id="updates-modal" hidden role="dialog" aria-modal="true" aria-labelledby="updatesTitle">
+    <div class="modal-backdrop" id="updatesBackdrop"></div>
+    <div class="modal-card">
+      <button class="modal-close" id="updatesClose" type="button" aria-label="Band karo" data-i18n-title="close">×</button>
+      <h2 class="modal-title" id="updatesTitle" data-i18n="updates_popup_title">Near-U me kya naya hai</h2>
+      <ul class="updates-list">
+        <li>Ab aap apna business khud edit kar sakte hain</li>
+        <li>Timings, services aur kai tarah ke links jodein: Instagram, Telegram, YouTube aur bhi</li>
+        <li>Jaldi aa raha hai: Hindi, English aur Hinglish language option</li>
+      </ul>
+      <button class="btn btn-search btn-block" id="updates-ok-btn" type="button" data-i18n="got_it">Theek hai</button>
+    </div>
+  </div>
+
+  <!-- ============ LANGUAGE SWITCHER INIT ============ -->
+  <!-- Header ke #nuLang ko 3 chhote buttons se bharta hai (i18n.js) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var box = document.getElementById('nuLang');
+      if (box && window.NU_buildLangSwitcher) {
+        window.NU_buildLangSwitcher(box);
+      }
+    });
+  </script>
+
+</body>
+</html>
