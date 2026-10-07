@@ -1,0 +1,1299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Near-U Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     Near-U Admin - css (inline)
+     Sections:
+       1.  Tokens
+       2.  Base / Reset
+       3.  Hidden + Focus
+       4.  Language switcher
+       5.  Gate (loading / not-logged-in / not-admin)
+       6.  Header
+       7.  Container + page title
+       8.  Search box
+       9.  Tabs (status filters)
+       10. Cards
+       11. State boxes (empty / error / loading)
+       12. Toasts
+       13. Media queries
+     ============================================================ */
+
+  /* ---------- 1. Tokens ---------- */
+  :root{
+    --cream:#FFF8F0;
+    --indigo:#4F46E5;
+    --indigo-dark:#4338CA;
+    --orange:#F97316;
+    --text:#1F2937;
+    --muted:#6B7280;
+    --line:#EDE4DA;
+    --white:#FFFFFF;
+    --green:#16A34A;
+    --green-dark:#15803D;
+    --red:#DC2626;
+    --grey:#6B7280;
+    --shadow-sm:0 4px 18px rgba(31,41,55,0.07);
+    --shadow-md:0 8px 30px rgba(79,70,229,0.10);
+  }
+
+  /* ---------- 2. Base / Reset ---------- */
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  a{color:var(--indigo);}
+  img,svg{display:block;max-width:100%;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* ---------- 3. Hidden + Focus ---------- */
+  .hidden{display:none !important;}
+  [hidden]{display:none !important;}
+
+  :focus-visible{
+    outline:3px solid var(--indigo);
+    outline-offset:2px;
+    border-radius:8px;
+  }
+
+  /* ---------- 4. Language switcher ---------- */
+  .nu-lang{
+    display:inline-flex;
+    align-items:center;
+    gap:3px;
+    flex-wrap:nowrap;
+    max-width:100%;
+  }
+  .nu-lang .lang-btn{
+    font-family:inherit;
+    font-size:11px;
+    font-weight:600;
+    line-height:1;
+    padding:5px 9px;
+    min-height:28px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--indigo);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    white-space:nowrap;
+    transition:background-color .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .nu-lang .lang-btn:hover{
+    background:#F5F3FF;
+    border-color:#DDD6FE;
+  }
+  .nu-lang .lang-btn.active{
+    background:var(--indigo);
+    color:#fff;
+    border-color:var(--indigo);
+  }
+
+  /* ---------- 5. Gate (loading / not-logged-in / not-admin) ---------- */
+  .center-wrap{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+  }
+
+  .gate-card{
+    background:var(--white);
+    border-radius:16px;
+    box-shadow:var(--shadow-md);
+    padding:32px 24px;
+    max-width:420px;
+    width:100%;
+    text-align:center;
+  }
+
+  .gate-icon{
+    width:56px;
+    height:56px;
+    margin:0 auto 16px;
+    border-radius:50%;
+    background:#EEF2FF;
+    color:var(--indigo);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .gate-icon svg{width:28px;height:28px;}
+
+  .gate-card h2{
+    font-size:19px;
+    font-weight:600;
+    margin:0 0 20px;
+    line-height:1.5;
+    color:var(--text);
+  }
+
+  .btn-link{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:44px;
+    padding:0 24px;
+    background:var(--indigo);
+    color:#fff;
+    text-decoration:none;
+    border-radius:12px;
+    font-weight:600;
+    font-size:15px;
+    transition:background .15s ease, transform .1s ease;
+  }
+  .btn-link:hover{background:var(--indigo-dark);}
+  .btn-link:active{transform:scale(0.98);}
+
+  /* ---------- 6. Header ---------- */
+  .site-header{
+    background:var(--white);
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:20;
+  }
+
+  .header-inner{
+    max-width:1100px;
+    margin:0 auto;
+    padding:10px 16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  .brand{
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:-0.3px;
+    color:var(--indigo);
+    margin:0;
+    white-space:nowrap;
+  }
+  .brand span{color:var(--orange);}
+
+  .header-spacer{flex:1 1 auto;}
+
+  .header-actions{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .link-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    min-height:40px;
+    padding:0 12px;
+    border-radius:12px;
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    text-decoration:none;
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--indigo);
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .link-btn:hover{background:#F5F3FF; border-color:#DDD6FE;}
+
+  .link-btn.logout{
+    color:var(--red);
+    border-color:#FECACA;
+    background:#FEF2F2;
+  }
+  .link-btn.logout:hover{background:#FEE2E2; border-color:#FCA5A5;}
+  .link-btn:disabled{opacity:.6; cursor:not-allowed;}
+
+  /* ---------- 7. Container + page title ---------- */
+  .container{
+    max-width:1100px;
+    margin:0 auto;
+    padding:18px 16px 60px;
+  }
+
+  .page-title{
+    font-size:14.5px;
+    color:var(--muted);
+    margin:0 0 14px;
+    font-weight:500;
+    line-height:1.5;
+  }
+
+  /* ---------- 8. Search box ---------- */
+  .search-wrap{
+    position:relative;
+    margin-bottom:14px;
+  }
+  .search-wrap .search-ico{
+    position:absolute;
+    left:14px;
+    top:50%;
+    transform:translateY(-50%);
+    width:18px;
+    height:18px;
+    color:var(--muted);
+    pointer-events:none;
+  }
+  .search-input{
+    width:100%;
+    min-height:44px;
+    padding:0 40px 0 42px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--white);
+    font-family:inherit;
+    font-size:14px;
+    color:var(--text);
+    outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .search-input:focus{
+    border-color:var(--indigo);
+    box-shadow:0 0 0 3px rgba(79,70,229,0.15);
+  }
+  .search-input::placeholder{color:#9CA3AF;}
+  .search-clear{
+    position:absolute;
+    right:6px;
+    top:50%;
+    transform:translateY(-50%);
+    width:32px;
+    height:32px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border:none;
+    border-radius:50%;
+    background:transparent;
+    color:var(--muted);
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    transition:background-color .15s ease;
+  }
+  .search-clear:hover{background:#F3F4F6; color:var(--text);}
+
+  /* ---------- 9. Tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:6px;
+    margin-bottom:18px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+
+  .tab{
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    min-height:44px;
+    padding:0 16px;
+    border-radius:999px;
+    background:var(--white);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:inherit;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .tab:hover{border-color:#DDD6FE;}
+  .tab.active{
+    background:var(--indigo);
+    border-color:var(--indigo);
+    color:#fff;
+  }
+
+  .tab .badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:22px;
+    height:22px;
+    padding:0 6px;
+    border-radius:999px;
+    background:#F3F4F6;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:700;
+  }
+  .tab.active .badge{
+    background:rgba(255,255,255,0.25);
+    color:#fff;
+  }
+
+  /* ---------- 10. Cards ---------- */
+  .cards{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .card{
+    background:var(--white);
+    border-radius:16px;
+    box-shadow:var(--shadow-sm);
+    padding:18px 16px;
+    border:1px solid #F6EFE7;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .card-top{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+
+  .card-thumb{
+    flex:0 0 auto;
+    width:56px;
+    height:56px;
+    border-radius:12px;
+    overflow:hidden;
+    background:linear-gradient(135deg,#EEF2FF 0%,#FFE9DE 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    font-weight:700;
+    color:var(--indigo);
+    user-select:none;
+  }
+  .card-thumb img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .card-info{
+    flex:1 1 auto;
+    min-width:0;
+  }
+
+  .card-name{
+    font-size:16px;
+    font-weight:700;
+    margin:0;
+    line-height:1.35;
+    word-break:break-word;
+  }
+
+  .card-cat{
+    font-size:12px;
+    color:var(--indigo);
+    font-weight:600;
+    background:#EEF2FF;
+    padding:3px 10px;
+    border-radius:999px;
+    display:inline-block;
+    margin-top:4px;
+  }
+
+  .status-badge{
+    flex:0 0 auto;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    padding:5px 11px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .status-pending   { background:#FEF3C7; color:#B45309; }
+  .status-published { background:#DCFCE7; color:#15803D; }
+  .status-suspended { background:#FFEDD5; color:#C2410C; }
+  .status-rejected  { background:#FEE2E2; color:#B91C1C; }
+
+  .card-row{
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.55;
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+  }
+  .card-row .ico{
+    flex:0 0 auto;
+    width:16px;
+    height:16px;
+    margin-top:2px;
+    color:var(--indigo);
+  }
+  .card-row .ico svg{width:16px;height:16px;display:block;}
+  .card-row strong{color:var(--text); font-weight:500;}
+  .card-row a{color:var(--indigo); text-decoration:none; word-break:break-word;}
+  .card-row a:hover{text-decoration:underline;}
+
+  .card-about{
+    font-size:13.5px;
+    color:#4B5563;
+    line-height:1.6;
+    margin:0;
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  .card-date{
+    font-size:12.5px;
+    color:#9CA3AF;
+  }
+
+  .card-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:4px;
+    padding-top:12px;
+    border-top:1px dashed var(--line);
+  }
+
+  .btn{
+    flex:1 1 130px;
+    min-height:44px;
+    padding:0 16px;
+    border:none;
+    border-radius:12px;
+    font-family:inherit;
+    font-size:14.5px;
+    font-weight:600;
+    color:#fff;
+    cursor:pointer;
+    transition:filter .15s ease, transform .1s ease, opacity .15s ease;
+  }
+  .btn:hover:not(:disabled){filter:brightness(0.94);}
+  .btn:active:not(:disabled){transform:scale(0.98);}
+  .btn:disabled{opacity:0.65; cursor:not-allowed;}
+
+  .btn-green{ background:var(--green); }
+  .btn-red{ background:var(--red); }
+  .btn-orange{ background:var(--orange); }
+  .btn-grey{ background:var(--grey); }
+
+  /* ---------- 11. State boxes ---------- */
+  .state-box{
+    background:var(--white);
+    border-radius:16px;
+    border:1px dashed var(--line);
+    padding:44px 20px;
+    text-align:center;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.6;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+  }
+  .state-box .state-ico{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:#EEF2FF;
+    color:var(--indigo);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .state-box .state-ico svg{width:28px;height:28px;}
+  .state-box.error .state-ico{background:#FEE2E2; color:var(--red);}
+
+  .loading-text{
+    text-align:center;
+    color:var(--muted);
+    font-size:14.5px;
+    padding:44px 16px;
+  }
+
+  /* Loading skeleton for cards */
+  .skeleton-card{
+    background:var(--white);
+    border-radius:16px;
+    border:1px solid #F6EFE7;
+    padding:18px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .sk{
+    background:#EFEAE1;
+    border-radius:8px;
+    position:relative;
+    overflow:hidden;
+  }
+  .sk::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+    transform:translateX(-100%);
+    animation:skShimmer 1.4s infinite;
+  }
+  @keyframes skShimmer{
+    to{transform:translateX(100%);}
+  }
+  .sk-row{display:flex; gap:12px; align-items:flex-start;}
+  .sk-thumb{width:56px; height:56px; border-radius:12px;}
+  .sk-title{height:16px; width:60%;}
+  .sk-sub{height:12px; width:35%; margin-top:6px;}
+  .sk-line{height:12px; width:100%;}
+  .sk-line.short{width:70%;}
+
+  /* ---------- 12. Toasts ---------- */
+  .toast-wrap{
+    position:fixed;
+    left:50%;
+    bottom:20px;
+    transform:translateX(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    align-items:center;
+    z-index:100;
+    width:calc(100% - 32px);
+    max-width:420px;
+    pointer-events:none;
+  }
+  .toast{
+    width:100%;
+    padding:12px 16px;
+    border-radius:12px;
+    font-size:14px;
+    font-weight:600;
+    color:#fff;
+    box-shadow:0 8px 24px rgba(0,0,0,0.18);
+    animation:toastIn 0.22s ease-out;
+    word-break:break-word;
+    pointer-events:auto;
+  }
+  .toast.success{ background:#16A34A; }
+  .toast.error{ background:#DC2626; }
+
+  @keyframes toastIn{
+    from{ opacity:0; transform:translateY(12px); }
+    to  { opacity:1; transform:translateY(0); }
+  }
+
+  /* ---------- 13. Media queries ---------- */
+  @media (min-width:900px){
+    .cards{grid-template-columns:repeat(2, minmax(0, 1fr));}
+    .container{padding:24px 24px 80px;}
+    .card{padding:20px;}
+    .btn{flex:0 1 auto; min-width:130px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOADING (page khulte hi dikhta hai)
+     ============================================================ -->
+<div id="loading" class="loading-text" data-i18n="loading">Loading...</div>
+
+<!-- ============================================================
+     GATE (session nahi / admin nahi)
+     ============================================================ -->
+<div id="gate" class="center-wrap hidden">
+  <div class="gate-card">
+    <div class="gate-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="11" width="16" height="10" rx="2"/>
+        <path d="M8 11V8a4 4 0 018 0v3"/>
+        <circle cx="12" cy="16" r="1.3"/>
+      </svg>
+    </div>
+    <h2 id="gateMessage"></h2>
+    <a class="btn-link" href="index.html" data-i18n="home">Near-U kholo</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     ADMIN PANEL
+     ============================================================ -->
+<div id="panel" class="hidden">
+  <header class="site-header">
+    <div class="header-inner">
+      <h1 class="brand">Near-U <span>Admin</span></h1>
+      <div class="header-spacer"></div>
+      <div class="header-actions">
+        <!-- Language switcher -->
+        <div id="nuLang" class="nu-lang" data-i18n-title="language"></div>
+
+        <a class="link-btn" href="index.html" data-i18n="home">Back to site</a>
+        <button type="button" class="link-btn logout" id="logoutBtn" data-i18n="logout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="page-title" data-i18n="admin_page_title">Businesses ko approve ya reject karo.</p>
+
+    <!-- Search / filter -->
+    <div class="search-wrap">
+      <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"/>
+        <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+      </svg>
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="Naam, area ya phone se dhoondo"
+        data-i18n-placeholder="admin_search_placeholder"
+      />
+      <button type="button" class="search-clear" id="searchClear" aria-label="Clear" data-i18n-title="close" hidden>&times;</button>
+    </div>
+
+    <!-- Tabs JS se banenge -->
+    <nav class="tabs" id="tabs" aria-label="Status filters"></nav>
+
+    <!-- Business cards yahan render honge -->
+    <section id="listArea">
+      <div class="loading-text" data-i18n="loading">Loading...</div>
+    </section>
+  </main>
+</div>
+
+<!-- Toast yahan aayenge -->
+<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+
+<!-- ============================================================
+     i18n LAYER
+     ============================================================ -->
+<script src="js/i18n.js"></script>
+
+<!-- ============================================================
+     SUPABASE LIBRARY
+     ============================================================ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     i18n helpers
+     ========================================================= */
+  function T(key, fallback) {
+    var v = null;
+    if (typeof window.t === 'function') {
+      try { v = window.t(key); } catch (e) { v = null; }
+    }
+    if (v && v !== key) return v;
+    return (fallback !== undefined) ? fallback : key;
+  }
+
+  function applyLangSafe() {
+    if (typeof window.applyLang === 'function') {
+      try { window.applyLang(); } catch (e) { /* ignore */ }
+    }
+  }
+
+  function initLangSwitcher() {
+    var box = document.getElementById('nuLang');
+    if (box && typeof window.NU_buildLangSwitcher === 'function') {
+      try { window.NU_buildLangSwitcher(box); } catch (e) { /* ignore */ }
+    }
+  }
+
+  /* =========================================================
+     SUPABASE SETUP
+     ========================================================= */
+  const SUPABASE_URL = "https://fuyhexxlxqsqtspkydil.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_lxiNGNL7BI-ywFvqajGbGw_cP38THcb";
+
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+  const TABS = [
+    { key: "pending",   i18n: "status_pending"   },
+    { key: "published", i18n: "status_published" },
+    { key: "suspended", i18n: "status_suspended" },
+    { key: "rejected",  i18n: "status_rejected"  }
+  ];
+
+  let allBusinesses = [];      // poora data ek baar load
+  let currentTab = "pending";  // default tab
+  let currentQuery = "";       // search query
+  let isLoading = false;
+
+  /* =========================================================
+     DOM REFS
+     ========================================================= */
+  const elLoading   = document.getElementById("loading");
+  const elGate      = document.getElementById("gate");
+  const elGateMsg   = document.getElementById("gateMessage");
+  const elPanel     = document.getElementById("panel");
+  const elTabs      = document.getElementById("tabs");
+  const elListArea  = document.getElementById("listArea");
+  const elToastWrap = document.getElementById("toastWrap");
+  const elLogout    = document.getElementById("logoutBtn");
+  const elSearch    = document.getElementById("searchInput");
+  const elSearchClr = document.getElementById("searchClear");
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  // HTML escape
+  function escapeHtml(value) {
+    if (value === null || value === undefined) return "";
+    return String(value).replace(/[&<>"']/g, function (ch) {
+      switch (ch) {
+        case "&": return "&amp;";
+        case "<": return "&lt;";
+        case ">": return "&gt;";
+        case '"': return "&quot;";
+        case "'": return "&#39;";
+        default:  return ch;
+      }
+    });
+  }
+
+  // Date "5 Oct 2026"
+  function formatDate(value) {
+    if (!value) return "";
+    const d = new Date(value);
+    if (isNaN(d.getTime())) return "";
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    return d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+  }
+
+  // Toast (2.8 sec)
+  function showToast(message, type) {
+    const toast = document.createElement("div");
+    toast.className = "toast " + (type === "error" ? "error" : "success");
+    toast.textContent = message;
+    elToastWrap.appendChild(toast);
+
+    setTimeout(function () {
+      toast.style.transition = "opacity 0.25s ease, transform 0.25s ease";
+      toast.style.opacity = "0";
+      toast.style.transform = "translateY(10px)";
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 260);
+    }, 2800);
+  }
+
+  function showGate(message) {
+    elLoading.classList.add("hidden");
+    elPanel.classList.add("hidden");
+    elGateMsg.textContent = message;
+    elGate.classList.remove("hidden");
+  }
+
+  function showPanel() {
+    elLoading.classList.add("hidden");
+    elGate.classList.add("hidden");
+    elPanel.classList.remove("hidden");
+  }
+
+  // Category name safe-nikalo
+  function categoryNameOf(business) {
+    const c = business && business.categories;
+    if (!c) return "";
+    if (Array.isArray(c)) return c.length ? (c[0] && c[0].name) || "" : "";
+    return c.name || "";
+  }
+
+  function statusClass(status) {
+    switch (status) {
+      case "pending":   return "status-pending";
+      case "published": return "status-published";
+      case "suspended": return "status-suspended";
+      case "rejected":  return "status-rejected";
+      default:          return "status-pending";
+    }
+  }
+
+  function statusLabel(status) {
+    // Use i18n key when available; fallback to capitalized status
+    const key = "status_" + String(status || "").toLowerCase();
+    const fallback = status
+      ? status.charAt(0).toUpperCase() + status.slice(1)
+      : "";
+    return T(key, fallback);
+  }
+
+  /* =========================================================
+     INLINE SVG ICONS (no emoji)
+     ========================================================= */
+  const ICO_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M12 21s-6-5.2-6-10a6 6 0 1112 0c0 4.8-6 10-6 10z"/>'
+    + '<circle cx="12" cy="11" r="2.2"/>'
+    + '</svg>';
+
+  const ICO_HOME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M3 10.5 12 3l9 7.5"/>'
+    + '<path d="M5 9.5V21h14V9.5"/>'
+    + '</svg>';
+
+  const ICO_PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 006.5 6.5L17 13l4 1.5v3a2 2 0 01-2.2 2A16.5 16.5 0 014.5 5.2 2 2 0 016.5 3z"/>'
+    + '</svg>';
+
+  const ICO_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<path d="M21 11.5a8.4 8.4 0 01-8.5 8.4 8.8 8.8 0 01-3.9-.9L3 21l2-4.6a8.4 8.4 0 01-1-4A8.4 8.4 0 0112.5 3 8.4 8.4 0 0121 11.5z"/>'
+    + '</svg>';
+
+  const ICO_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<rect x="3" y="5" width="18" height="16" rx="2"/>'
+    + '<path d="M3 10h18"/>'
+    + '<path d="M8 3v4"/>'
+    + '<path d="M16 3v4"/>'
+    + '</svg>';
+
+  const ICO_EMPTY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<rect x="3" y="7" width="18" height="13" rx="2"/>'
+    + '<path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/>'
+    + '<path d="M3 12h18"/>'
+    + '</svg>';
+
+  const ICO_ERROR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+    + '<circle cx="12" cy="12" r="9"/>'
+    + '<line x1="12" y1="8" x2="12" y2="13"/>'
+    + '<line x1="12" y1="16.5" x2="12" y2="16.6"/>'
+    + '</svg>';
+
+  /* =========================================================
+     ACCESS CHECK - session + admin
+     ========================================================= */
+  async function init() {
+    let session = null;
+    try {
+      const res = await sb.auth.getSession();
+      session = res && res.data ? res.data.session : null;
+    } catch (err) {
+      session = null;
+    }
+
+    if (!session) {
+      showGate(T('admin_gate_login', 'Pehle Near-U par login karo'));
+      return;
+    }
+
+    let isAdmin = false;
+    try {
+      const { data, error } = await sb.rpc("is_admin");
+      if (error) throw error;
+      isAdmin = data === true;
+    } catch (err) {
+      isAdmin = false;
+    }
+
+    if (!isAdmin) {
+      showGate(T('admin_gate_not_admin', 'Is page ka access sirf admin ko hai'));
+      return;
+    }
+
+    showPanel();
+    renderTabs();
+    await loadBusinesses();
+  }
+
+  /* =========================================================
+     DATA LOAD
+     ========================================================= */
+
+  // Business ke photo ka public URL (agar photo_url ya photo_path ho)
+  function photoUrlOf(b) {
+    if (!b) return "";
+    if (b.photo_url) return String(b.photo_url);
+    if (b.photo_path) {
+      try {
+        const res = sb.storage.from('businesses').getPublicUrl(b.photo_path);
+        return (res && res.data && res.data.publicUrl) ? res.data.publicUrl : "";
+      } catch (e) {
+        return "";
+      }
+    }
+    return "";
+  }
+
+  // Pehle photo_url/photo_path ke saath try, fail hone par bina photo ke
+  async function queryBusinesses() {
+    const baseCols = "id,name,slug,about,address,area,phone,whatsapp,status,created_at,categories(name)";
+    const photoCols = baseCols + ",photo_url,photo_path";
+
+    let res = await sb
+      .from("businesses")
+      .select(photoCols)
+      .order("created_at", { ascending: false });
+
+    // Agar photo_url/photo_path column DB me nahi hain to fallback
+    if (res && res.error) {
+      const msg = String(res.error.message || "").toLowerCase();
+      if (msg.indexOf("photo_url") !== -1 || msg.indexOf("photo_path") !== -1 || msg.indexOf("column") !== -1) {
+        res = await sb
+          .from("businesses")
+          .select(baseCols)
+          .order("created_at", { ascending: false });
+      }
+    }
+    return res;
+  }
+
+  async function loadBusinesses() {
+    isLoading = true;
+    elListArea.innerHTML = '<div class="loading-text">' + escapeHtml(T('loading')) + '</div>';
+
+    const res = await queryBusinesses();
+    isLoading = false;
+
+    if (res && res.error) {
+      elListArea.innerHTML =
+        '<div class="state-box error">' +
+          '<span class="state-ico">' + ICO_ERROR + '</span>' +
+          '<div>' + escapeHtml(T('admin_err_load', 'Data load nahi ho paya')) + ': ' + escapeHtml(res.error.message) + '</div>' +
+        '</div>';
+      showToast(res.error.message, "error");
+      return;
+    }
+
+    allBusinesses = Array.isArray(res && res.data) ? res.data : [];
+    renderTabs();
+    renderList();
+  }
+
+  /* =========================================================
+     SEARCH / FILTER
+     ========================================================= */
+  function matchesQuery(b, q) {
+    if (!q) return true;
+    const hay = (
+      String(b.name || "") + " " +
+      String(b.area || "") + " " +
+      String(b.address || "") + " " +
+      String(b.phone || "") + " " +
+      String(b.whatsapp || "") + " " +
+      String(categoryNameOf(b) || "")
+    ).toLowerCase();
+    return hay.indexOf(q) !== -1;
+  }
+
+  /* =========================================================
+     TABS
+     ========================================================= */
+  function countFor(key) {
+    let n = 0;
+    for (let i = 0; i < allBusinesses.length; i++) {
+      if (allBusinesses[i].status === key) n++;
+    }
+    return n;
+  }
+
+  function renderTabs() {
+    let html = "";
+    for (let i = 0; i < TABS.length; i++) {
+      const t = TABS[i];
+      const label = T(t.i18n, t.key.charAt(0).toUpperCase() + t.key.slice(1));
+      html +=
+        '<button type="button" class="tab' +
+        (t.key === currentTab ? " active" : "") +
+        '" data-tab="' + escapeHtml(t.key) + '">' +
+        escapeHtml(label) +
+        '<span class="badge">' + countFor(t.key) + "</span>" +
+        "</button>";
+    }
+    elTabs.innerHTML = html;
+  }
+
+  elTabs.addEventListener("click", function (e) {
+    const btn = e.target.closest(".tab");
+    if (!btn) return;
+    const key = btn.getAttribute("data-tab");
+    if (!key || key === currentTab) return;
+    currentTab = key;
+    renderTabs();
+    renderList();
+  });
+
+  /* =========================================================
+     CARD RENDERING
+     ========================================================= */
+
+  function actionsHtml(b) {
+    const id = escapeHtml(b.id);
+    const base = 'data-id="' + id + '"';
+
+    switch (b.status) {
+      case "pending":
+        return (
+          '<button type="button" class="btn btn-green" ' + base +
+          ' data-next="published" data-msg="' + escapeHtml(T("admin_msg_approved", "Business approved")) + '">'
+          + escapeHtml(T("admin_btn_approve", "Approve")) + '</button>' +
+          '<button type="button" class="btn btn-red" ' + base +
+          ' data-next="rejected" data-confirm="' + escapeHtml(T("admin_confirm_reject", "Pakka?")) + '" data-msg="' + escapeHtml(T("admin_msg_rejected", "Business rejected")) + '">'
+          + escapeHtml(T("admin_btn_reject", "Reject")) + '</button>'
+        );
+      case "published":
+        return (
+          '<button type="button" class="btn btn-orange" ' + base +
+          ' data-next="suspended" data-confirm="' + escapeHtml(T("admin_confirm_suspend", "Pakka?")) + '" data-msg="' + escapeHtml(T("admin_msg_suspended", "Business suspended")) + '">'
+          + escapeHtml(T("admin_btn_suspend", "Suspend")) + '</button>'
+        );
+      case "suspended":
+        return (
+          '<button type="button" class="btn btn-green" ' + base +
+          ' data-next="published" data-msg="' + escapeHtml(T("admin_msg_approved", "Business approved")) + '">'
+          + escapeHtml(T("admin_btn_approve_again", "Approve again")) + '</button>'
+        );
+      case "rejected":
+        return (
+          '<button type="button" class="btn btn-grey" ' + base +
+          ' data-next="pending" data-msg="' + escapeHtml(T("admin_msg_pending", "Moved back to pending")) + '">'
+          + escapeHtml(T("admin_btn_move_pending", "Move back to pending")) + '</button>'
+        );
+      default:
+        return "";
+    }
+  }
+
+  function cardHtml(b) {
+    const name = escapeHtml(b.name) || escapeHtml(T("admin_untitled", "Untitled business"));
+    const cat = escapeHtml(categoryNameOf(b));
+    const area = escapeHtml(b.area);
+    const address = escapeHtml(b.address);
+    const about = escapeHtml(b.about);
+    const phone = escapeHtml(b.phone);
+    const whatsapp = escapeHtml(b.whatsapp);
+    const created = escapeHtml(formatDate(b.created_at));
+    const badgeClass = statusClass(b.status);
+
+    // Thumbnail: photo ya letter
+    const photoUrl = photoUrlOf(b);
+    let thumbHTML;
+    if (photoUrl) {
+      thumbHTML = '<img alt="" src="' + escapeHtml(photoUrl) + '" loading="lazy" />';
+    } else {
+      const initial = (String(b.name || "?").trim().charAt(0) || "?").toUpperCase();
+      thumbHTML = escapeHtml(initial);
+    }
+
+    let html = '<article class="card">';
+
+    html += '<div class="card-top">';
+    html += '<div class="card-thumb" aria-hidden="true">' + thumbHTML + '</div>';
+    html += '<div class="card-info">';
+    html += '<h3 class="card-name">' + name + "</h3>";
+    if (cat) html += '<span class="card-cat">' + cat + "</span>";
+    html += '</div>';
+    html += '<span class="status-badge ' + badgeClass + '">' + escapeHtml(statusLabel(b.status)) + "</span>";
+    html += '</div>';
+
+    if (area) {
+      html += '<div class="card-row"><span class="ico">' + ICO_PIN + '</span><span>' + area + "</span></div>";
+    }
+    if (address) {
+      html += '<div class="card-row"><span class="ico">' + ICO_HOME + '</span><span>' + address + "</span></div>";
+    }
+    if (about) {
+      html += '<p class="card-about">' + about + "</p>";
+    }
+    if (phone) {
+      html +=
+        '<div class="card-row"><span class="ico">' + ICO_PHONE + '</span><span><a href="tel:' +
+        phone + '">' + phone + "</a></span></div>";
+    }
+    if (whatsapp) {
+      html +=
+        '<div class="card-row"><span class="ico">' + ICO_WA + '</span><span><a href="https://wa.me/' +
+        whatsapp.replace(/[^0-9]/g, "") + '" target="_blank" rel="noopener">' +
+        whatsapp + "</a></span></div>";
+    }
+    if (created) {
+      html += '<div class="card-row card-date"><span class="ico">' + ICO_CAL + '</span><span>'
+        + escapeHtml(T("admin_added_on", "Added on")) + ' ' + created + "</span></div>";
+    }
+
+    html += '<div class="card-actions">' + actionsHtml(b) + "</div>";
+    html += "</article>";
+    return html;
+  }
+
+  function renderSkeleton() {
+    let html = '<div class="cards">';
+    for (let i = 0; i < 4; i++) {
+      html += ''
+        + '<div class="skeleton-card" aria-hidden="true">'
+        +   '<div class="sk-row">'
+        +     '<div class="sk sk-thumb"></div>'
+        +     '<div style="flex:1;min-width:0;">'
+        +       '<div class="sk sk-title"></div>'
+        +       '<div class="sk sk-sub"></div>'
+        +     '</div>'
+        +   '</div>'
+        +   '<div class="sk sk-line"></div>'
+        +   '<div class="sk sk-line short"></div>'
+        +   '<div class="sk sk-line" style="width:40%;"></div>'
+        + '</div>';
+    }
+    html += '</div>';
+    elListArea.innerHTML = html;
+  }
+
+  function renderList() {
+    if (isLoading) {
+      renderSkeleton();
+      return;
+    }
+
+    const q = currentQuery.trim().toLowerCase();
+
+    const items = allBusinesses.filter(function (b) {
+      if (b.status !== currentTab) return false;
+      return matchesQuery(b, q);
+    });
+
+    // Empty state
+    if (!items.length) {
+      const isSearch = !!q;
+      const msg = isSearch
+        ? T("admin_empty_search", "Is search se koi business nahi mila.")
+        : T("admin_empty_tab", "Is section me abhi koi business nahi hai.");
+      elListArea.innerHTML =
+        '<div class="state-box">' +
+          '<span class="state-ico">' + ICO_EMPTY + '</span>' +
+          '<div>' + escapeHtml(msg) + '</div>' +
+        '</div>';
+      return;
+    }
+
+    let html = '<div class="cards">';
+    for (let i = 0; i < items.length; i++) {
+      html += cardHtml(items[i]);
+    }
+    html += "</div>";
+    elListArea.innerHTML = html;
+  }
+
+  /* =========================================================
+     SEARCH EVENTS
+     ========================================================= */
+  function onSearchInput() {
+    currentQuery = elSearch.value || "";
+    if (elSearchClr) elSearchClr.hidden = currentQuery.length === 0;
+    renderList();
+  }
+
+  if (elSearch) {
+    elSearch.addEventListener("input", onSearchInput);
+  }
+  if (elSearchClr) {
+    elSearchClr.addEventListener("click", function () {
+      elSearch.value = "";
+      currentQuery = "";
+      elSearchClr.hidden = true;
+      renderList();
+      elSearch.focus();
+    });
+  }
+
+  /* =========================================================
+     ACTIONS - Approve / Reject / Suspend
+     ========================================================= */
+  elListArea.addEventListener("click", async function (e) {
+    const btn = e.target.closest("button.btn");
+    if (!btn || btn.disabled) return;
+
+    const id = btn.getAttribute("data-id");
+    const nextStatus = btn.getAttribute("data-next");
+    const confirmMsg = btn.getAttribute("data-confirm");
+    const successMsg = btn.getAttribute("data-msg") || T("admin_msg_updated", "Updated");
+
+    if (!id || !nextStatus) return;
+
+    if (confirmMsg && !window.confirm(confirmMsg)) return;
+
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = T("admin_wait", "Please wait...");
+
+    const { error } = await sb
+      .from("businesses")
+      .update({ status: nextStatus })
+      .eq("id", id);
+
+    if (error) {
+      showToast(error.message || T("admin_msg_generic_error", "Kuch galat ho gaya"), "error");
+      btn.disabled = false;
+      btn.textContent = originalText;
+      return;
+    }
+
+    showToast(successMsg, "success");
+    await loadBusinesses();
+  });
+
+  /* =========================================================
+     LOGOUT
+     ========================================================= */
+  elLogout.addEventListener("click", async function () {
+    elLogout.disabled = true;
+    elLogout.textContent = T("admin_wait", "Please wait...");
+    try {
+      await sb.auth.signOut();
+    } catch (err) {
+      /* ignore and reload anyway */
+    }
+    window.location.reload();
+  });
+
+  /* =========================================================
+     LANGUAGE CHANGE
+     ========================================================= */
+  window.addEventListener("nu-lang-changed", function () {
+    renderTabs();
+    renderList();
+    applyLangSafe();
+  });
+
+  /* =========================================================
+     GO
+     ========================================================= */
+  initLangSwitcher();
+  applyLangSafe();
+  init();
+})();
+</script>
+</body>
+</html>
