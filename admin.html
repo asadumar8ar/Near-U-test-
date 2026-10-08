@@ -1,1299 +1,598 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Near-U Admin</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  /* ============================================================
-     Near-U Admin - css (inline)
-     Sections:
-       1.  Tokens
-       2.  Base / Reset
-       3.  Hidden + Focus
-       4.  Language switcher
-       5.  Gate (loading / not-logged-in / not-admin)
-       6.  Header
-       7.  Container + page title
-       8.  Search box
-       9.  Tabs (status filters)
-       10. Cards
-       11. State boxes (empty / error / loading)
-       12. Toasts
-       13. Media queries
-     ============================================================ */
-
-  /* ---------- 1. Tokens ---------- */
-  :root{
-    --cream:#FFF8F0;
-    --indigo:#4F46E5;
-    --indigo-dark:#4338CA;
-    --orange:#F97316;
-    --text:#1F2937;
-    --muted:#6B7280;
-    --line:#EDE4DA;
-    --white:#FFFFFF;
-    --green:#16A34A;
-    --green-dark:#15803D;
-    --red:#DC2626;
-    --grey:#6B7280;
-    --shadow-sm:0 4px 18px rgba(31,41,55,0.07);
-    --shadow-md:0 8px 30px rgba(79,70,229,0.10);
-  }
-
-  /* ---------- 2. Base / Reset ---------- */
-  *,*::before,*::after{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  html{-webkit-text-size-adjust:100%;}
-  body{
-    font-family:'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    background:var(--cream);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    min-height:100vh;
-  }
-  a{color:var(--indigo);}
-  img,svg{display:block;max-width:100%;}
-  button{font-family:inherit;cursor:pointer;}
-
-  /* ---------- 3. Hidden + Focus ---------- */
-  .hidden{display:none !important;}
-  [hidden]{display:none !important;}
-
-  :focus-visible{
-    outline:3px solid var(--indigo);
-    outline-offset:2px;
-    border-radius:8px;
-  }
-
-  /* ---------- 4. Language switcher ---------- */
-  .nu-lang{
-    display:inline-flex;
-    align-items:center;
-    gap:3px;
-    flex-wrap:nowrap;
-    max-width:100%;
-  }
-  .nu-lang .lang-btn{
-    font-family:inherit;
-    font-size:11px;
-    font-weight:600;
-    line-height:1;
-    padding:5px 9px;
-    min-height:28px;
-    border-radius:999px;
-    border:1px solid var(--line);
-    background:var(--white);
-    color:var(--indigo);
-    cursor:pointer;
-    -webkit-tap-highlight-color:transparent;
-    white-space:nowrap;
-    transition:background-color .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .nu-lang .lang-btn:hover{
-    background:#F5F3FF;
-    border-color:#DDD6FE;
-  }
-  .nu-lang .lang-btn.active{
-    background:var(--indigo);
-    color:#fff;
-    border-color:var(--indigo);
-  }
-
-  /* ---------- 5. Gate (loading / not-logged-in / not-admin) ---------- */
-  .center-wrap{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px 16px;
-  }
-
-  .gate-card{
-    background:var(--white);
-    border-radius:16px;
-    box-shadow:var(--shadow-md);
-    padding:32px 24px;
-    max-width:420px;
-    width:100%;
-    text-align:center;
-  }
-
-  .gate-icon{
-    width:56px;
-    height:56px;
-    margin:0 auto 16px;
-    border-radius:50%;
-    background:#EEF2FF;
-    color:var(--indigo);
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .gate-icon svg{width:28px;height:28px;}
-
-  .gate-card h2{
-    font-size:19px;
-    font-weight:600;
-    margin:0 0 20px;
-    line-height:1.5;
-    color:var(--text);
-  }
-
-  .btn-link{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-height:44px;
-    padding:0 24px;
-    background:var(--indigo);
-    color:#fff;
-    text-decoration:none;
-    border-radius:12px;
-    font-weight:600;
-    font-size:15px;
-    transition:background .15s ease, transform .1s ease;
-  }
-  .btn-link:hover{background:var(--indigo-dark);}
-  .btn-link:active{transform:scale(0.98);}
-
-  /* ---------- 6. Header ---------- */
-  .site-header{
-    background:var(--white);
-    border-bottom:1px solid var(--line);
-    position:sticky;
-    top:0;
-    z-index:20;
-  }
-
-  .header-inner{
-    max-width:1100px;
-    margin:0 auto;
-    padding:10px 16px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-
-  .brand{
-    font-size:18px;
-    font-weight:700;
-    letter-spacing:-0.3px;
-    color:var(--indigo);
-    margin:0;
-    white-space:nowrap;
-  }
-  .brand span{color:var(--orange);}
-
-  .header-spacer{flex:1 1 auto;}
-
-  .header-actions{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    flex-wrap:wrap;
-  }
-
-  .link-btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    min-height:40px;
-    padding:0 12px;
-    border-radius:12px;
-    font-family:inherit;
-    font-size:13px;
-    font-weight:600;
-    text-decoration:none;
-    border:1px solid var(--line);
-    background:var(--white);
-    color:var(--indigo);
-    cursor:pointer;
-    white-space:nowrap;
-    transition:background .15s ease, border-color .15s ease;
-  }
-  .link-btn:hover{background:#F5F3FF; border-color:#DDD6FE;}
-
-  .link-btn.logout{
-    color:var(--red);
-    border-color:#FECACA;
-    background:#FEF2F2;
-  }
-  .link-btn.logout:hover{background:#FEE2E2; border-color:#FCA5A5;}
-  .link-btn:disabled{opacity:.6; cursor:not-allowed;}
-
-  /* ---------- 7. Container + page title ---------- */
-  .container{
-    max-width:1100px;
-    margin:0 auto;
-    padding:18px 16px 60px;
-  }
-
-  .page-title{
-    font-size:14.5px;
-    color:var(--muted);
-    margin:0 0 14px;
-    font-weight:500;
-    line-height:1.5;
-  }
-
-  /* ---------- 8. Search box ---------- */
-  .search-wrap{
-    position:relative;
-    margin-bottom:14px;
-  }
-  .search-wrap .search-ico{
-    position:absolute;
-    left:14px;
-    top:50%;
-    transform:translateY(-50%);
-    width:18px;
-    height:18px;
-    color:var(--muted);
-    pointer-events:none;
-  }
-  .search-input{
-    width:100%;
-    min-height:44px;
-    padding:0 40px 0 42px;
-    border:1px solid var(--line);
-    border-radius:12px;
-    background:var(--white);
-    font-family:inherit;
-    font-size:14px;
-    color:var(--text);
-    outline:none;
-    transition:border-color .15s ease, box-shadow .15s ease;
-  }
-  .search-input:focus{
-    border-color:var(--indigo);
-    box-shadow:0 0 0 3px rgba(79,70,229,0.15);
-  }
-  .search-input::placeholder{color:#9CA3AF;}
-  .search-clear{
-    position:absolute;
-    right:6px;
-    top:50%;
-    transform:translateY(-50%);
-    width:32px;
-    height:32px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border:none;
-    border-radius:50%;
-    background:transparent;
-    color:var(--muted);
-    font-size:18px;
-    line-height:1;
-    cursor:pointer;
-    transition:background-color .15s ease;
-  }
-  .search-clear:hover{background:#F3F4F6; color:var(--text);}
-
-  /* ---------- 9. Tabs ---------- */
-  .tabs{
-    display:flex;
-    gap:8px;
-    overflow-x:auto;
-    padding-bottom:6px;
-    margin-bottom:18px;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  .tabs::-webkit-scrollbar{display:none;}
-
-  .tab{
-    flex:0 0 auto;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    min-height:44px;
-    padding:0 16px;
-    border-radius:999px;
-    background:var(--white);
-    border:1px solid var(--line);
-    color:var(--text);
-    font-family:inherit;
-    font-size:14px;
-    font-weight:600;
-    cursor:pointer;
-    white-space:nowrap;
-    transition:background .15s ease, color .15s ease, border-color .15s ease;
-  }
-  .tab:hover{border-color:#DDD6FE;}
-  .tab.active{
-    background:var(--indigo);
-    border-color:var(--indigo);
-    color:#fff;
-  }
-
-  .tab .badge{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-width:22px;
-    height:22px;
-    padding:0 6px;
-    border-radius:999px;
-    background:#F3F4F6;
-    color:var(--muted);
-    font-size:12px;
-    font-weight:700;
-  }
-  .tab.active .badge{
-    background:rgba(255,255,255,0.25);
-    color:#fff;
-  }
-
-  /* ---------- 10. Cards ---------- */
-  .cards{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:14px;
-  }
-
-  .card{
-    background:var(--white);
-    border-radius:16px;
-    box-shadow:var(--shadow-sm);
-    padding:18px 16px;
-    border:1px solid #F6EFE7;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  }
-
-  .card-top{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-  }
-
-  .card-thumb{
-    flex:0 0 auto;
-    width:56px;
-    height:56px;
-    border-radius:12px;
-    overflow:hidden;
-    background:linear-gradient(135deg,#EEF2FF 0%,#FFE9DE 100%);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:22px;
-    font-weight:700;
-    color:var(--indigo);
-    user-select:none;
-  }
-  .card-thumb img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-  }
-
-  .card-info{
-    flex:1 1 auto;
-    min-width:0;
-  }
-
-  .card-name{
-    font-size:16px;
-    font-weight:700;
-    margin:0;
-    line-height:1.35;
-    word-break:break-word;
-  }
-
-  .card-cat{
-    font-size:12px;
-    color:var(--indigo);
-    font-weight:600;
-    background:#EEF2FF;
-    padding:3px 10px;
-    border-radius:999px;
-    display:inline-block;
-    margin-top:4px;
-  }
-
-  .status-badge{
-    flex:0 0 auto;
-    font-size:11px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:0.4px;
-    padding:5px 11px;
-    border-radius:999px;
-    white-space:nowrap;
-  }
-  .status-pending   { background:#FEF3C7; color:#B45309; }
-  .status-published { background:#DCFCE7; color:#15803D; }
-  .status-suspended { background:#FFEDD5; color:#C2410C; }
-  .status-rejected  { background:#FEE2E2; color:#B91C1C; }
-
-  .card-row{
-    font-size:13.5px;
-    color:var(--muted);
-    line-height:1.55;
-    display:flex;
-    gap:8px;
-    align-items:flex-start;
-  }
-  .card-row .ico{
-    flex:0 0 auto;
-    width:16px;
-    height:16px;
-    margin-top:2px;
-    color:var(--indigo);
-  }
-  .card-row .ico svg{width:16px;height:16px;display:block;}
-  .card-row strong{color:var(--text); font-weight:500;}
-  .card-row a{color:var(--indigo); text-decoration:none; word-break:break-word;}
-  .card-row a:hover{text-decoration:underline;}
-
-  .card-about{
-    font-size:13.5px;
-    color:#4B5563;
-    line-height:1.6;
-    margin:0;
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
-
-  .card-date{
-    font-size:12.5px;
-    color:#9CA3AF;
-  }
-
-  .card-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:4px;
-    padding-top:12px;
-    border-top:1px dashed var(--line);
-  }
-
-  .btn{
-    flex:1 1 130px;
-    min-height:44px;
-    padding:0 16px;
-    border:none;
-    border-radius:12px;
-    font-family:inherit;
-    font-size:14.5px;
-    font-weight:600;
-    color:#fff;
-    cursor:pointer;
-    transition:filter .15s ease, transform .1s ease, opacity .15s ease;
-  }
-  .btn:hover:not(:disabled){filter:brightness(0.94);}
-  .btn:active:not(:disabled){transform:scale(0.98);}
-  .btn:disabled{opacity:0.65; cursor:not-allowed;}
-
-  .btn-green{ background:var(--green); }
-  .btn-red{ background:var(--red); }
-  .btn-orange{ background:var(--orange); }
-  .btn-grey{ background:var(--grey); }
-
-  /* ---------- 11. State boxes ---------- */
-  .state-box{
-    background:var(--white);
-    border-radius:16px;
-    border:1px dashed var(--line);
-    padding:44px 20px;
-    text-align:center;
-    color:var(--muted);
-    font-size:15px;
-    line-height:1.6;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
-  }
-  .state-box .state-ico{
-    width:56px;
-    height:56px;
-    border-radius:50%;
-    background:#EEF2FF;
-    color:var(--indigo);
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .state-box .state-ico svg{width:28px;height:28px;}
-  .state-box.error .state-ico{background:#FEE2E2; color:var(--red);}
-
-  .loading-text{
-    text-align:center;
-    color:var(--muted);
-    font-size:14.5px;
-    padding:44px 16px;
-  }
-
-  /* Loading skeleton for cards */
-  .skeleton-card{
-    background:var(--white);
-    border-radius:16px;
-    border:1px solid #F6EFE7;
-    padding:18px 16px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  }
-  .sk{
-    background:#EFEAE1;
-    border-radius:8px;
-    position:relative;
-    overflow:hidden;
-  }
-  .sk::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
-    transform:translateX(-100%);
-    animation:skShimmer 1.4s infinite;
-  }
-  @keyframes skShimmer{
-    to{transform:translateX(100%);}
-  }
-  .sk-row{display:flex; gap:12px; align-items:flex-start;}
-  .sk-thumb{width:56px; height:56px; border-radius:12px;}
-  .sk-title{height:16px; width:60%;}
-  .sk-sub{height:12px; width:35%; margin-top:6px;}
-  .sk-line{height:12px; width:100%;}
-  .sk-line.short{width:70%;}
-
-  /* ---------- 12. Toasts ---------- */
-  .toast-wrap{
-    position:fixed;
-    left:50%;
-    bottom:20px;
-    transform:translateX(-50%);
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    align-items:center;
-    z-index:100;
-    width:calc(100% - 32px);
-    max-width:420px;
-    pointer-events:none;
-  }
-  .toast{
-    width:100%;
-    padding:12px 16px;
-    border-radius:12px;
-    font-size:14px;
-    font-weight:600;
-    color:#fff;
-    box-shadow:0 8px 24px rgba(0,0,0,0.18);
-    animation:toastIn 0.22s ease-out;
-    word-break:break-word;
-    pointer-events:auto;
-  }
-  .toast.success{ background:#16A34A; }
-  .toast.error{ background:#DC2626; }
-
-  @keyframes toastIn{
-    from{ opacity:0; transform:translateY(12px); }
-    to  { opacity:1; transform:translateY(0); }
-  }
-
-  /* ---------- 13. Media queries ---------- */
-  @media (min-width:900px){
-    .cards{grid-template-columns:repeat(2, minmax(0, 1fr));}
-    .container{padding:24px 24px 80px;}
-    .card{padding:20px;}
-    .btn{flex:0 1 auto; min-width:130px;}
-  }
-</style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Viona Bangles â€” Site Manager</title>
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#14224A" />
+<link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/admin.css" />
 </head>
 <body>
 
-<!-- ============================================================
-     LOADING (page khulte hi dikhta hai)
-     ============================================================ -->
-<div id="loading" class="loading-text" data-i18n="loading">Loading...</div>
-
-<!-- ============================================================
-     GATE (session nahi / admin nahi)
-     ============================================================ -->
-<div id="gate" class="center-wrap hidden">
-  <div class="gate-card">
-    <div class="gate-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="4" y="11" width="16" height="10" rx="2"/>
-        <path d="M8 11V8a4 4 0 018 0v3"/>
-        <circle cx="12" cy="16" r="1.3"/>
-      </svg>
+<!-- =========================================================================
+     LOGIN SCREEN (shown only when not signed in)
+     ========================================================================= -->
+<div class="login-screen" id="loginScreen" hidden>
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="images/logo-gold.png"
+           alt="Viona Bangles"
+           class="wordmark-img login-logo"
+           onerror="this.style.display='none';var f=document.getElementById('loginLogoFallback');if(f){f.hidden=false;}" />
+      <span class="brand-fallback" id="loginLogoFallback" hidden>Viona</span>
+      <p class="login-brand-sub">ELEGANT BANGLES</p>
+      <p class="login-brand-italic">Made for You</p>
     </div>
-    <h2 id="gateMessage"></h2>
-    <a class="btn-link" href="index.html" data-i18n="home">Near-U kholo</a>
+
+    <h1 class="login-title">Site Manager</h1>
+    <p class="login-text">
+      Sign in with the Google account listed as an admin for this store.
+    </p>
+
+    <button type="button" class="btn btn-gold btn-block" id="loginGoogleBtn">
+      <svg viewBox="0 0 48 48" aria-hidden="true" class="google-icon">
+        <path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/>
+        <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+        <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/>
+        <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C36.9 40.3 44 35 44 24c0-1.2-.1-2.4-.4-3.5z"/>
+      </svg>
+      Sign in with Google
+    </button>
+
+    <p class="login-note" id="loginNote" hidden></p>
+    <p class="login-foot">Protected by Supabase Row Level Security.</p>
   </div>
 </div>
 
-<!-- ============================================================
-     ADMIN PANEL
-     ============================================================ -->
-<div id="panel" class="hidden">
-  <header class="site-header">
-    <div class="header-inner">
-      <h1 class="brand">Near-U <span>Admin</span></h1>
-      <div class="header-spacer"></div>
-      <div class="header-actions">
-        <!-- Language switcher -->
-        <div id="nuLang" class="nu-lang" data-i18n-title="language"></div>
+<!-- =========================================================================
+     NO ACCESS SCREEN
+     ========================================================================= -->
+<div class="login-screen" id="deniedScreen" hidden>
+  <div class="login-card">
+    <h1 class="login-title">You do not have access</h1>
+    <p class="login-text">
+      This Google account is not an admin for Viona Bangles.
+    </p>
+    <p class="login-text" id="deniedEmail"></p>
+    <button type="button" class="btn btn-gold btn-block" id="deniedSignOut">Sign out</button>
+  </div>
+</div>
 
-        <a class="link-btn" href="index.html" data-i18n="home">Back to site</a>
-        <button type="button" class="link-btn logout" id="logoutBtn" data-i18n="logout">Logout</button>
+<!-- =========================================================================
+     MAIN APP
+     ========================================================================= -->
+<div class="app" id="app" hidden>
+
+  <!-- ---------- SIDEBAR (desktop) / TOP BAR (mobile) ---------- -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="images/logo-gold.png"
+           alt="Viona Bangles"
+           class="wordmark-img sidebar-logo"
+           onerror="this.style.display='none';var f=document.getElementById('sidebarLogoFallback');if(f){f.hidden=false;}" />
+      <span class="brand-fallback" id="sidebarLogoFallback" hidden>Viona</span>
+      <p class="sidebar-tag">Site Manager</p>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button type="button" class="tab-btn is-active" data-tab="products">Products</button>
+      <button type="button" class="tab-btn" data-tab="offers">Offers</button>
+      <button type="button" class="tab-btn" data-tab="reviews">Reviews</button>
+      <button type="button" class="tab-btn" data-tab="settings">Site Settings</button>
+      <button type="button" class="tab-btn" data-tab="faq">FAQ</button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <a class="sidebar-link" href="index.html" target="_blank" rel="noopener">View Site â†—</a>
+      <button type="button" class="sidebar-signout" id="signOutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ---------- MAIN CONTENT ---------- -->
+  <main class="main">
+
+    <!-- Top bar (mobile) -->
+    <div class="mobile-bar" id="mobileBar">
+      <div class="mobile-brand">
+        <img src="images/logo-gold.png" alt="Viona Bangles" class="wordmark-img mobile-logo"
+             onerror="this.style.display='none';var f=document.getElementById('mobileLogoFallback');if(f){f.hidden=false;}" />
+        <span class="brand-fallback" id="mobileLogoFallback" hidden>Viona</span>
       </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <p class="page-title" data-i18n="admin_page_title">Businesses ko approve ya reject karo.</p>
-
-    <!-- Search / filter -->
-    <div class="search-wrap">
-      <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="11" cy="11" r="7"/>
-        <line x1="16.5" y1="16.5" x2="21" y2="21"/>
-      </svg>
-      <input
-        type="text"
-        id="searchInput"
-        class="search-input"
-        autocomplete="off"
-        spellcheck="false"
-        placeholder="Naam, area ya phone se dhoondo"
-        data-i18n-placeholder="admin_search_placeholder"
-      />
-      <button type="button" class="search-clear" id="searchClear" aria-label="Clear" data-i18n-title="close" hidden>&times;</button>
+      <button type="button" class="mobile-signout" id="mobileSignOut">Sign out</button>
     </div>
 
-    <!-- Tabs JS se banenge -->
-    <nav class="tabs" id="tabs" aria-label="Status filters"></nav>
+    <div class="mobile-tabs" id="mobileTabs">
+      <button type="button" class="tab-btn is-active" data-tab="products">Products</button>
+      <button type="button" class="tab-btn" data-tab="offers">Offers</button>
+      <button type="button" class="tab-btn" data-tab="reviews">Reviews</button>
+      <button type="button" class="tab-btn" data-tab="settings">Settings</button>
+      <button type="button" class="tab-btn" data-tab="faq">FAQ</button>
+    </div>
 
-    <!-- Business cards yahan render honge -->
-    <section id="listArea">
-      <div class="loading-text" data-i18n="loading">Loading...</div>
+    <!-- Who is signed in -->
+    <div class="who-bar">
+      <span class="who-label">Signed in as</span>
+      <span class="who-name" id="whoName">â€”</span>
+    </div>
+
+    <!-- ===================================================================
+         TAB: PRODUCTS
+         =================================================================== -->
+    <section class="tab-panel is-active" id="panel-products">
+      <header class="panel-head">
+        <div>
+          <h2 class="panel-title">Products</h2>
+          <p class="panel-sub">Add, edit and organize the bangles shown on the website.</p>
+        </div>
+        <button type="button" class="btn btn-gold" id="newProductBtn">+ New Product</button>
+      </header>
+
+      <div class="list-block" id="productsList">
+        <p class="loading-line">Loading productsâ€¦</p>
+      </div>
     </section>
+
+    <!-- ===================================================================
+         TAB: OFFERS
+         =================================================================== -->
+    <section class="tab-panel" id="panel-offers">
+      <header class="panel-head">
+        <div>
+          <h2 class="panel-title">Offers</h2>
+          <p class="panel-sub">Announcement strips, banners and popups. Leave empty to hide them completely.</p>
+        </div>
+        <button type="button" class="btn btn-gold" id="newOfferBtn">+ New Message</button>
+      </header>
+
+      <div class="list-block" id="offersList">
+        <p class="loading-line">Loading messagesâ€¦</p>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB: REVIEWS
+         =================================================================== -->
+    <section class="tab-panel" id="panel-reviews">
+      <header class="panel-head">
+        <div>
+          <h2 class="panel-title">Reviews</h2>
+          <p class="panel-sub">New reviews are pending until you approve them.</p>
+        </div>
+        <div class="filter-row">
+          <button type="button" class="filter-btn is-active" data-filter="pending">Pending</button>
+          <button type="button" class="filter-btn" data-filter="approved">Approved</button>
+          <button type="button" class="filter-btn" data-filter="all">All</button>
+        </div>
+      </header>
+
+      <div class="list-block" id="reviewsList">
+        <p class="loading-line">Loading reviewsâ€¦</p>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         TAB: SITE SETTINGS
+         =================================================================== -->
+    <section class="tab-panel" id="panel-settings">
+      <header class="panel-head">
+        <div>
+          <h2 class="panel-title">Site Settings</h2>
+          <p class="panel-sub">These values feed the public website. Empty fields fall back to config.js.</p>
+        </div>
+        <button type="button" class="btn btn-gold" id="saveSettingsBtn">Save Settings</button>
+      </header>
+
+      <form class="card" id="settingsForm" onsubmit="return false;">
+
+        <h3 class="card-title">Business</h3>
+        <div class="grid-2">
+          <label class="field">
+            <span>Business Name</span>
+            <input type="text" id="setBusinessName" class="input" />
+          </label>
+          <label class="field">
+            <span>WhatsApp Number (with country code, no +)</span>
+            <input type="text" id="setWhatsapp" class="input" placeholder="916200920746" />
+          </label>
+          <label class="field">
+            <span>Email</span>
+            <input type="email" id="setEmail" class="input" />
+          </label>
+          <label class="field">
+            <span>Phone (optional)</span>
+            <input type="text" id="setPhone" class="input" />
+          </label>
+          <label class="field">
+            <span>City</span>
+            <input type="text" id="setCity" class="input" />
+          </label>
+          <label class="field">
+            <span>Open Hours</span>
+            <input type="text" id="setHours" class="input" />
+          </label>
+        </div>
+
+        <h3 class="card-title">Hero</h3>
+        <div class="grid-2">
+          <label class="field">
+            <span>Small label above the heading</span>
+            <input type="text" id="setHeroLabel" class="input" />
+          </label>
+          <label class="field">
+            <span>Big heading</span>
+            <input type="text" id="setHeroHeading" class="input" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Hero paragraph</span>
+          <textarea id="setHeroText" class="textarea"></textarea>
+        </label>
+
+        <h3 class="card-title">About</h3>
+        <label class="field">
+          <span>About heading</span>
+          <input type="text" id="setAboutHeading" class="input" />
+        </label>
+        <label class="field">
+          <span>About paragraph</span>
+          <textarea id="setAboutText" class="textarea"></textarea>
+        </label>
+
+        <h3 class="card-title">Policies</h3>
+        <label class="field">
+          <span>Delivery text</span>
+          <textarea id="setDelivery" class="textarea"></textarea>
+        </label>
+        <label class="field">
+          <span>Payment text</span>
+          <textarea id="setPayment" class="textarea"></textarea>
+        </label>
+        <label class="field">
+          <span>Return text</span>
+          <textarea id="setReturns" class="textarea"></textarea>
+        </label>
+
+        <h3 class="card-title">Trust Points (up to 3)</h3>
+        <div class="grid-3">
+          <label class="field">
+            <span>Point 1</span>
+            <input type="text" id="setTrust1" class="input" />
+          </label>
+          <label class="field">
+            <span>Point 2</span>
+            <input type="text" id="setTrust2" class="input" />
+          </label>
+          <label class="field">
+            <span>Point 3</span>
+            <input type="text" id="setTrust3" class="input" />
+          </label>
+        </div>
+
+        <h3 class="card-title">Social Links (optional)</h3>
+        <div class="grid-3">
+          <label class="field">
+            <span>Instagram URL</span>
+            <input type="url" id="setInstagram" class="input" placeholder="https://instagram.com/â€¦" />
+          </label>
+          <label class="field">
+            <span>Facebook URL</span>
+            <input type="url" id="setFacebook" class="input" placeholder="https://facebook.com/â€¦" />
+          </label>
+          <label class="field">
+            <span>YouTube URL</span>
+            <input type="url" id="setYoutube" class="input" placeholder="https://youtube.com/â€¦" />
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-gold" id="saveSettingsBtn2">Save Settings</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===================================================================
+         TAB: FAQ
+         =================================================================== -->
+    <section class="tab-panel" id="panel-faq">
+      <header class="panel-head">
+        <div>
+          <h2 class="panel-title">FAQ</h2>
+          <p class="panel-sub">Questions shown on the website. Drag the arrows to reorder.</p>
+        </div>
+        <button type="button" class="btn btn-gold" id="newFaqBtn">+ New Question</button>
+      </header>
+
+      <div class="list-block" id="faqList">
+        <p class="loading-line">Loading FAQsâ€¦</p>
+      </div>
+    </section>
+
   </main>
 </div>
 
-<!-- Toast yahan aayenge -->
-<div class="toast-wrap" id="toastWrap" aria-live="polite"></div>
+<!-- =========================================================================
+     MODAL: PRODUCT EDIT
+     ========================================================================= -->
+<div class="modal" id="productModal" hidden>
+  <div class="modal-backdrop" data-close="productModal"></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+    <button type="button" class="modal-close" data-close="productModal" aria-label="Close">Ã—</button>
 
-<!-- ============================================================
-     i18n LAYER
-     ============================================================ -->
-<script src="js/i18n.js"></script>
+    <h2 class="modal-title" id="productModalTitle">Edit Product</h2>
+    <p class="modal-sub" id="productModalSub">Fill in the details below.</p>
 
-<!-- ============================================================
-     SUPABASE LIBRARY
-     ============================================================ -->
+    <form class="modal-form" id="productForm" onsubmit="return false;">
+      <input type="hidden" id="pEditId" value="" />
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Name *</span>
+          <input type="text" id="pName" class="input" required />
+        </label>
+        <label class="field">
+          <span>Product code (SKU)</span>
+          <input type="text" id="pCode" class="input" placeholder="VB-001" />
+          <small class="hint">Leave blank to auto-assign VB-{id}.</small>
+        </label>
+        <label class="field">
+          <span>Category *</span>
+          <input type="text" id="pCategory" class="input" list="catList" required />
+          <datalist id="catList"></datalist>
+          <small class="hint">Pick an existing one or type a new category.</small>
+        </label>
+        <label class="field">
+          <span>Price (Rs) *</span>
+          <input type="number" id="pPrice" class="input" min="0" step="1" required />
+        </label>
+        <label class="field">
+          <span>Old Price (optional)</span>
+          <input type="number" id="pOldPrice" class="input" min="0" step="1" />
+          <small class="hint">Set this higher than Price to show an X% OFF badge.</small>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Available Sizes</span>
+        <div class="chips-edit" id="pSizesChips"></div>
+        <div class="chip-add">
+          <input type="text" id="pNewSize" class="input" placeholder="e.g. 2.10" />
+          <button type="button" class="btn btn-ghost" id="pAddSizeBtn">Add size</button>
+        </div>
+      </label>
+
+      <label class="field">
+        <span>Description</span>
+        <textarea id="pDescription" class="textarea" rows="4"></textarea>
+      </label>
+
+      <div class="grid-3">
+        <label class="switch">
+          <input type="checkbox" id="pIsActive" checked />
+          <span>Active (visible on site)</span>
+        </label>
+        <label class="switch">
+          <input type="checkbox" id="pIsFeatured" />
+          <span>Featured</span>
+        </label>
+        <label class="field">
+          <span>Sort order</span>
+          <input type="number" id="pSortOrder" class="input" step="1" value="0" />
+        </label>
+      </div>
+
+      <h3 class="card-title">Images</h3>
+      <p class="hint">The first image is the main image. Up to 8 extra images.</p>
+
+      <div class="images-edit" id="pImages"></div>
+
+      <input type="file" id="pImageInput" accept="image/*" multiple hidden />
+      <button type="button" class="btn btn-ghost" id="pAddImageBtn">+ Add Images</button>
+
+      <p class="form-error" id="productFormError" hidden></p>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" data-close="productModal">Cancel</button>
+        <button type="button" class="btn btn-gold" id="saveProductBtn">Save Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: OFFER EDIT
+     ========================================================================= -->
+<div class="modal" id="offerModal" hidden>
+  <div class="modal-backdrop" data-close="offerModal"></div>
+  <div class="modal-panel modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="offerModalTitle">
+    <button type="button" class="modal-close" data-close="offerModal" aria-label="Close">Ã—</button>
+
+    <h2 class="modal-title" id="offerModalTitle">Edit Message</h2>
+    <p class="modal-sub">Pick a display type and write any message you like.</p>
+
+    <form class="modal-form" id="offerForm" onsubmit="return false;">
+      <input type="hidden" id="oEditId" value="" />
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Display Type *</span>
+          <select id="oDisplayType" class="input">
+            <option value="strip">Strip (thin bar on top)</option>
+            <option value="banner">Banner (large carousel)</option>
+            <option value="popup">Popup (centre modal)</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Text align</span>
+          <select id="oTextAlign" class="input">
+            <option value="center">Center</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="field">
+        <span>Title / Main text</span>
+        <input type="text" id="oTitle" class="input" />
+      </label>
+
+      <label class="field">
+        <span>Subtitle (italic, optional)</span>
+        <input type="text" id="oSubtitle" class="input" />
+      </label>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Button text (optional)</span>
+          <input type="text" id="oButtonText" class="input" placeholder="SHOP NOW" />
+        </label>
+        <label class="field">
+          <span>Button link (optional)</span>
+          <input type="text" id="oButtonLink" class="input" placeholder="#collections" />
+        </label>
+      </div>
+
+      <h3 class="card-title">Background</h3>
+      <p class="hint">Upload an image OR set colours. Image wins if both are set.</p>
+
+      <div class="offer-bg-image" id="oBgImageWrap"></div>
+      <input type="file" id="oBgInput" accept="image/*" hidden />
+      <button type="button" class="btn btn-ghost" id="oBgBtn">Choose background image</button>
+
+      <div class="grid-3">
+        <label class="field">
+          <span>Background colour</span>
+          <input type="color" id="oBgColor" class="input input-color" value="#14224A" />
+        </label>
+        <label class="field">
+          <span>Second colour (for gradient)</span>
+          <input type="color" id="oBgColor2" class="input input-color" value="#1D2E5C" />
+        </label>
+        <label class="field">
+          <span>Text colour</span>
+          <input type="color" id="oTextColor" class="input input-color" value="#FFFFFF" />
+        </label>
+      </div>
+
+      <div class="grid-3">
+        <label class="field">
+          <span>Button background</span>
+          <input type="color" id="oButtonBg" class="input input-color" value="#C9A24A" />
+        </label>
+        <label class="field">
+          <span>Button text colour</span>
+          <input type="color" id="oButtonTextColor" class="input input-color" value="#14224A" />
+        </label>
+        <label class="field">
+          <span>Sort order</span>
+          <input type="number" id="oSortOrder" class="input" step="1" value="0" />
+        </label>
+      </div>
+
+      <h3 class="card-title">Schedule</h3>
+      <div class="grid-3">
+        <label class="field">
+          <span>Start (optional)</span>
+          <input type="datetime-local" id="oStartsAt" class="input" />
+        </label>
+        <label class="field">
+          <span>End (optional)</span>
+          <input type="datetime-local" id="oEndsAt" class="input" />
+        </label>
+        <label class="switch">
+          <input type="checkbox" id="oIsActive" checked />
+          <span>Active</span>
+        </label>
+      </div>
+
+      <h3 class="card-title">Live Preview</h3>
+      <div class="offer-preview" id="oPreview"></div>
+
+      <p class="form-error" id="offerFormError" hidden></p>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" data-close="offerModal">Cancel</button>
+        <button type="button" class="btn btn-gold" id="saveOfferBtn">Save Message</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: FAQ EDIT
+     ========================================================================= -->
+<div class="modal" id="faqModal" hidden>
+  <div class="modal-backdrop" data-close="faqModal"></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="faqModalTitle">
+    <button type="button" class="modal-close" data-close="faqModal" aria-label="Close">Ã—</button>
+
+    <h2 class="modal-title" id="faqModalTitle">Edit Question</h2>
+
+    <form class="modal-form" id="faqForm" onsubmit="return false;">
+      <input type="hidden" id="fEditId" value="" />
+
+      <label class="field">
+        <span>Question *</span>
+        <input type="text" id="fQuestion" class="input" required />
+      </label>
+
+      <label class="field">
+        <span>Answer *</span>
+        <textarea id="fAnswer" class="textarea" rows="5" required></textarea>
+      </label>
+
+      <div class="grid-2">
+        <label class="field">
+          <span>Sort order</span>
+          <input type="number" id="fSortOrder" class="input" step="1" value="0" />
+        </label>
+        <label class="switch">
+          <input type="checkbox" id="fIsActive" checked />
+          <span>Visible on site</span>
+        </label>
+      </div>
+
+      <p class="form-error" id="faqFormError" hidden></p>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-ghost" data-close="faqModal">Cancel</button>
+        <button type="button" class="btn btn-gold" id="saveFaqBtn">Save Question</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =========================================================================
+     CONFIRM DIALOG
+     ========================================================================= -->
+<div class="modal modal-small" id="confirmModal" hidden>
+  <div class="modal-backdrop" data-close="confirmModal"></div>
+  <div class="modal-panel" role="alertdialog" aria-modal="true">
+    <h2 class="modal-title" id="confirmTitle">Are you sure?</h2>
+    <p class="modal-sub" id="confirmText">This cannot be undone.</p>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" id="confirmNo">Cancel</button>
+      <button type="button" class="btn btn-danger" id="confirmYes">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<!-- Global loading overlay -->
+<div class="busy" id="busy" hidden>
+  <div class="busy-spinner" aria-hidden="true"></div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/admin.js"></script>
 
-<script>
-(function () {
-  "use strict";
-
-  /* =========================================================
-     i18n helpers
-     ========================================================= */
-  function T(key, fallback) {
-    var v = null;
-    if (typeof window.t === 'function') {
-      try { v = window.t(key); } catch (e) { v = null; }
-    }
-    if (v && v !== key) return v;
-    return (fallback !== undefined) ? fallback : key;
-  }
-
-  function applyLangSafe() {
-    if (typeof window.applyLang === 'function') {
-      try { window.applyLang(); } catch (e) { /* ignore */ }
-    }
-  }
-
-  function initLangSwitcher() {
-    var box = document.getElementById('nuLang');
-    if (box && typeof window.NU_buildLangSwitcher === 'function') {
-      try { window.NU_buildLangSwitcher(box); } catch (e) { /* ignore */ }
-    }
-  }
-
-  /* =========================================================
-     SUPABASE SETUP
-     ========================================================= */
-  const SUPABASE_URL = "https://fuyhexxlxqsqtspkydil.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_lxiNGNL7BI-ywFvqajGbGw_cP38THcb";
-
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  /* =========================================================
-     STATE
-     ========================================================= */
-  const TABS = [
-    { key: "pending",   i18n: "status_pending"   },
-    { key: "published", i18n: "status_published" },
-    { key: "suspended", i18n: "status_suspended" },
-    { key: "rejected",  i18n: "status_rejected"  }
-  ];
-
-  let allBusinesses = [];      // poora data ek baar load
-  let currentTab = "pending";  // default tab
-  let currentQuery = "";       // search query
-  let isLoading = false;
-
-  /* =========================================================
-     DOM REFS
-     ========================================================= */
-  const elLoading   = document.getElementById("loading");
-  const elGate      = document.getElementById("gate");
-  const elGateMsg   = document.getElementById("gateMessage");
-  const elPanel     = document.getElementById("panel");
-  const elTabs      = document.getElementById("tabs");
-  const elListArea  = document.getElementById("listArea");
-  const elToastWrap = document.getElementById("toastWrap");
-  const elLogout    = document.getElementById("logoutBtn");
-  const elSearch    = document.getElementById("searchInput");
-  const elSearchClr = document.getElementById("searchClear");
-
-  /* =========================================================
-     HELPERS
-     ========================================================= */
-
-  // HTML escape
-  function escapeHtml(value) {
-    if (value === null || value === undefined) return "";
-    return String(value).replace(/[&<>"']/g, function (ch) {
-      switch (ch) {
-        case "&": return "&amp;";
-        case "<": return "&lt;";
-        case ">": return "&gt;";
-        case '"': return "&quot;";
-        case "'": return "&#39;";
-        default:  return ch;
-      }
-    });
-  }
-
-  // Date "5 Oct 2026"
-  function formatDate(value) {
-    if (!value) return "";
-    const d = new Date(value);
-    if (isNaN(d.getTime())) return "";
-    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    return d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
-  }
-
-  // Toast (2.8 sec)
-  function showToast(message, type) {
-    const toast = document.createElement("div");
-    toast.className = "toast " + (type === "error" ? "error" : "success");
-    toast.textContent = message;
-    elToastWrap.appendChild(toast);
-
-    setTimeout(function () {
-      toast.style.transition = "opacity 0.25s ease, transform 0.25s ease";
-      toast.style.opacity = "0";
-      toast.style.transform = "translateY(10px)";
-      setTimeout(function () {
-        if (toast.parentNode) toast.parentNode.removeChild(toast);
-      }, 260);
-    }, 2800);
-  }
-
-  function showGate(message) {
-    elLoading.classList.add("hidden");
-    elPanel.classList.add("hidden");
-    elGateMsg.textContent = message;
-    elGate.classList.remove("hidden");
-  }
-
-  function showPanel() {
-    elLoading.classList.add("hidden");
-    elGate.classList.add("hidden");
-    elPanel.classList.remove("hidden");
-  }
-
-  // Category name safe-nikalo
-  function categoryNameOf(business) {
-    const c = business && business.categories;
-    if (!c) return "";
-    if (Array.isArray(c)) return c.length ? (c[0] && c[0].name) || "" : "";
-    return c.name || "";
-  }
-
-  function statusClass(status) {
-    switch (status) {
-      case "pending":   return "status-pending";
-      case "published": return "status-published";
-      case "suspended": return "status-suspended";
-      case "rejected":  return "status-rejected";
-      default:          return "status-pending";
-    }
-  }
-
-  function statusLabel(status) {
-    // Use i18n key when available; fallback to capitalized status
-    const key = "status_" + String(status || "").toLowerCase();
-    const fallback = status
-      ? status.charAt(0).toUpperCase() + status.slice(1)
-      : "";
-    return T(key, fallback);
-  }
-
-  /* =========================================================
-     INLINE SVG ICONS (no emoji)
-     ========================================================= */
-  const ICO_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    + '<path d="M12 21s-6-5.2-6-10a6 6 0 1112 0c0 4.8-6 10-6 10z"/>'
-    + '<circle cx="12" cy="11" r="2.2"/>'
-    + '</svg>';
-
-  const ICO_HOME = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    + '<path d="M3 10.5 12 3l9 7.5"/>'
-    + '<path d="M5 9.5V21h14V9.5"/>'
-    + '</svg>';
-
-  const ICO_PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    + '<path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 006.5 6.5L17 13l4 1.5v3a2 2 0 01-2.2 2A16.5 16.5 0 014.5 5.2 2 2 0 016.5 3z"/>'
-    + '</svg>';
-
-  const ICO_WA = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    + '<path d="M21 11.5a8.4 8.4 0 01-8.5 8.4 8.8 8.8 0 01-3.9-.9L3 21l2-4.6a8.4 8.4 0 01-1-4A8.4 8.4 0 0112.5 3 8.4 8.4 0 0121 11.5z"/>'
-    + '</svg>';
-
-  const ICO_CAL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    + '<rect x="3" y="5" width="18" height="16" rx="2"/>'
-    + '<path d="M3 10h18"/>'
-    + '<path d="M8 3v4"/>'
-    + '<path d="M16 3v4"/>'
-    + '</svg>';
-
-  const ICO_EMPTY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    + '<rect x="3" y="7" width="18" height="13" rx="2"/>'
-    + '<path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/>'
-    + '<path d="M3 12h18"/>'
-    + '</svg>';
-
-  const ICO_ERROR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-    + '<circle cx="12" cy="12" r="9"/>'
-    + '<line x1="12" y1="8" x2="12" y2="13"/>'
-    + '<line x1="12" y1="16.5" x2="12" y2="16.6"/>'
-    + '</svg>';
-
-  /* =========================================================
-     ACCESS CHECK - session + admin
-     ========================================================= */
-  async function init() {
-    let session = null;
-    try {
-      const res = await sb.auth.getSession();
-      session = res && res.data ? res.data.session : null;
-    } catch (err) {
-      session = null;
-    }
-
-    if (!session) {
-      showGate(T('admin_gate_login', 'Pehle Near-U par login karo'));
-      return;
-    }
-
-    let isAdmin = false;
-    try {
-      const { data, error } = await sb.rpc("is_admin");
-      if (error) throw error;
-      isAdmin = data === true;
-    } catch (err) {
-      isAdmin = false;
-    }
-
-    if (!isAdmin) {
-      showGate(T('admin_gate_not_admin', 'Is page ka access sirf admin ko hai'));
-      return;
-    }
-
-    showPanel();
-    renderTabs();
-    await loadBusinesses();
-  }
-
-  /* =========================================================
-     DATA LOAD
-     ========================================================= */
-
-  // Business ke photo ka public URL (agar photo_url ya photo_path ho)
-  function photoUrlOf(b) {
-    if (!b) return "";
-    if (b.photo_url) return String(b.photo_url);
-    if (b.photo_path) {
-      try {
-        const res = sb.storage.from('businesses').getPublicUrl(b.photo_path);
-        return (res && res.data && res.data.publicUrl) ? res.data.publicUrl : "";
-      } catch (e) {
-        return "";
-      }
-    }
-    return "";
-  }
-
-  // Pehle photo_url/photo_path ke saath try, fail hone par bina photo ke
-  async function queryBusinesses() {
-    const baseCols = "id,name,slug,about,address,area,phone,whatsapp,status,created_at,categories(name)";
-    const photoCols = baseCols + ",photo_url,photo_path";
-
-    let res = await sb
-      .from("businesses")
-      .select(photoCols)
-      .order("created_at", { ascending: false });
-
-    // Agar photo_url/photo_path column DB me nahi hain to fallback
-    if (res && res.error) {
-      const msg = String(res.error.message || "").toLowerCase();
-      if (msg.indexOf("photo_url") !== -1 || msg.indexOf("photo_path") !== -1 || msg.indexOf("column") !== -1) {
-        res = await sb
-          .from("businesses")
-          .select(baseCols)
-          .order("created_at", { ascending: false });
-      }
-    }
-    return res;
-  }
-
-  async function loadBusinesses() {
-    isLoading = true;
-    elListArea.innerHTML = '<div class="loading-text">' + escapeHtml(T('loading')) + '</div>';
-
-    const res = await queryBusinesses();
-    isLoading = false;
-
-    if (res && res.error) {
-      elListArea.innerHTML =
-        '<div class="state-box error">' +
-          '<span class="state-ico">' + ICO_ERROR + '</span>' +
-          '<div>' + escapeHtml(T('admin_err_load', 'Data load nahi ho paya')) + ': ' + escapeHtml(res.error.message) + '</div>' +
-        '</div>';
-      showToast(res.error.message, "error");
-      return;
-    }
-
-    allBusinesses = Array.isArray(res && res.data) ? res.data : [];
-    renderTabs();
-    renderList();
-  }
-
-  /* =========================================================
-     SEARCH / FILTER
-     ========================================================= */
-  function matchesQuery(b, q) {
-    if (!q) return true;
-    const hay = (
-      String(b.name || "") + " " +
-      String(b.area || "") + " " +
-      String(b.address || "") + " " +
-      String(b.phone || "") + " " +
-      String(b.whatsapp || "") + " " +
-      String(categoryNameOf(b) || "")
-    ).toLowerCase();
-    return hay.indexOf(q) !== -1;
-  }
-
-  /* =========================================================
-     TABS
-     ========================================================= */
-  function countFor(key) {
-    let n = 0;
-    for (let i = 0; i < allBusinesses.length; i++) {
-      if (allBusinesses[i].status === key) n++;
-    }
-    return n;
-  }
-
-  function renderTabs() {
-    let html = "";
-    for (let i = 0; i < TABS.length; i++) {
-      const t = TABS[i];
-      const label = T(t.i18n, t.key.charAt(0).toUpperCase() + t.key.slice(1));
-      html +=
-        '<button type="button" class="tab' +
-        (t.key === currentTab ? " active" : "") +
-        '" data-tab="' + escapeHtml(t.key) + '">' +
-        escapeHtml(label) +
-        '<span class="badge">' + countFor(t.key) + "</span>" +
-        "</button>";
-    }
-    elTabs.innerHTML = html;
-  }
-
-  elTabs.addEventListener("click", function (e) {
-    const btn = e.target.closest(".tab");
-    if (!btn) return;
-    const key = btn.getAttribute("data-tab");
-    if (!key || key === currentTab) return;
-    currentTab = key;
-    renderTabs();
-    renderList();
-  });
-
-  /* =========================================================
-     CARD RENDERING
-     ========================================================= */
-
-  function actionsHtml(b) {
-    const id = escapeHtml(b.id);
-    const base = 'data-id="' + id + '"';
-
-    switch (b.status) {
-      case "pending":
-        return (
-          '<button type="button" class="btn btn-green" ' + base +
-          ' data-next="published" data-msg="' + escapeHtml(T("admin_msg_approved", "Business approved")) + '">'
-          + escapeHtml(T("admin_btn_approve", "Approve")) + '</button>' +
-          '<button type="button" class="btn btn-red" ' + base +
-          ' data-next="rejected" data-confirm="' + escapeHtml(T("admin_confirm_reject", "Pakka?")) + '" data-msg="' + escapeHtml(T("admin_msg_rejected", "Business rejected")) + '">'
-          + escapeHtml(T("admin_btn_reject", "Reject")) + '</button>'
-        );
-      case "published":
-        return (
-          '<button type="button" class="btn btn-orange" ' + base +
-          ' data-next="suspended" data-confirm="' + escapeHtml(T("admin_confirm_suspend", "Pakka?")) + '" data-msg="' + escapeHtml(T("admin_msg_suspended", "Business suspended")) + '">'
-          + escapeHtml(T("admin_btn_suspend", "Suspend")) + '</button>'
-        );
-      case "suspended":
-        return (
-          '<button type="button" class="btn btn-green" ' + base +
-          ' data-next="published" data-msg="' + escapeHtml(T("admin_msg_approved", "Business approved")) + '">'
-          + escapeHtml(T("admin_btn_approve_again", "Approve again")) + '</button>'
-        );
-      case "rejected":
-        return (
-          '<button type="button" class="btn btn-grey" ' + base +
-          ' data-next="pending" data-msg="' + escapeHtml(T("admin_msg_pending", "Moved back to pending")) + '">'
-          + escapeHtml(T("admin_btn_move_pending", "Move back to pending")) + '</button>'
-        );
-      default:
-        return "";
-    }
-  }
-
-  function cardHtml(b) {
-    const name = escapeHtml(b.name) || escapeHtml(T("admin_untitled", "Untitled business"));
-    const cat = escapeHtml(categoryNameOf(b));
-    const area = escapeHtml(b.area);
-    const address = escapeHtml(b.address);
-    const about = escapeHtml(b.about);
-    const phone = escapeHtml(b.phone);
-    const whatsapp = escapeHtml(b.whatsapp);
-    const created = escapeHtml(formatDate(b.created_at));
-    const badgeClass = statusClass(b.status);
-
-    // Thumbnail: photo ya letter
-    const photoUrl = photoUrlOf(b);
-    let thumbHTML;
-    if (photoUrl) {
-      thumbHTML = '<img alt="" src="' + escapeHtml(photoUrl) + '" loading="lazy" />';
-    } else {
-      const initial = (String(b.name || "?").trim().charAt(0) || "?").toUpperCase();
-      thumbHTML = escapeHtml(initial);
-    }
-
-    let html = '<article class="card">';
-
-    html += '<div class="card-top">';
-    html += '<div class="card-thumb" aria-hidden="true">' + thumbHTML + '</div>';
-    html += '<div class="card-info">';
-    html += '<h3 class="card-name">' + name + "</h3>";
-    if (cat) html += '<span class="card-cat">' + cat + "</span>";
-    html += '</div>';
-    html += '<span class="status-badge ' + badgeClass + '">' + escapeHtml(statusLabel(b.status)) + "</span>";
-    html += '</div>';
-
-    if (area) {
-      html += '<div class="card-row"><span class="ico">' + ICO_PIN + '</span><span>' + area + "</span></div>";
-    }
-    if (address) {
-      html += '<div class="card-row"><span class="ico">' + ICO_HOME + '</span><span>' + address + "</span></div>";
-    }
-    if (about) {
-      html += '<p class="card-about">' + about + "</p>";
-    }
-    if (phone) {
-      html +=
-        '<div class="card-row"><span class="ico">' + ICO_PHONE + '</span><span><a href="tel:' +
-        phone + '">' + phone + "</a></span></div>";
-    }
-    if (whatsapp) {
-      html +=
-        '<div class="card-row"><span class="ico">' + ICO_WA + '</span><span><a href="https://wa.me/' +
-        whatsapp.replace(/[^0-9]/g, "") + '" target="_blank" rel="noopener">' +
-        whatsapp + "</a></span></div>";
-    }
-    if (created) {
-      html += '<div class="card-row card-date"><span class="ico">' + ICO_CAL + '</span><span>'
-        + escapeHtml(T("admin_added_on", "Added on")) + ' ' + created + "</span></div>";
-    }
-
-    html += '<div class="card-actions">' + actionsHtml(b) + "</div>";
-    html += "</article>";
-    return html;
-  }
-
-  function renderSkeleton() {
-    let html = '<div class="cards">';
-    for (let i = 0; i < 4; i++) {
-      html += ''
-        + '<div class="skeleton-card" aria-hidden="true">'
-        +   '<div class="sk-row">'
-        +     '<div class="sk sk-thumb"></div>'
-        +     '<div style="flex:1;min-width:0;">'
-        +       '<div class="sk sk-title"></div>'
-        +       '<div class="sk sk-sub"></div>'
-        +     '</div>'
-        +   '</div>'
-        +   '<div class="sk sk-line"></div>'
-        +   '<div class="sk sk-line short"></div>'
-        +   '<div class="sk sk-line" style="width:40%;"></div>'
-        + '</div>';
-    }
-    html += '</div>';
-    elListArea.innerHTML = html;
-  }
-
-  function renderList() {
-    if (isLoading) {
-      renderSkeleton();
-      return;
-    }
-
-    const q = currentQuery.trim().toLowerCase();
-
-    const items = allBusinesses.filter(function (b) {
-      if (b.status !== currentTab) return false;
-      return matchesQuery(b, q);
-    });
-
-    // Empty state
-    if (!items.length) {
-      const isSearch = !!q;
-      const msg = isSearch
-        ? T("admin_empty_search", "Is search se koi business nahi mila.")
-        : T("admin_empty_tab", "Is section me abhi koi business nahi hai.");
-      elListArea.innerHTML =
-        '<div class="state-box">' +
-          '<span class="state-ico">' + ICO_EMPTY + '</span>' +
-          '<div>' + escapeHtml(msg) + '</div>' +
-        '</div>';
-      return;
-    }
-
-    let html = '<div class="cards">';
-    for (let i = 0; i < items.length; i++) {
-      html += cardHtml(items[i]);
-    }
-    html += "</div>";
-    elListArea.innerHTML = html;
-  }
-
-  /* =========================================================
-     SEARCH EVENTS
-     ========================================================= */
-  function onSearchInput() {
-    currentQuery = elSearch.value || "";
-    if (elSearchClr) elSearchClr.hidden = currentQuery.length === 0;
-    renderList();
-  }
-
-  if (elSearch) {
-    elSearch.addEventListener("input", onSearchInput);
-  }
-  if (elSearchClr) {
-    elSearchClr.addEventListener("click", function () {
-      elSearch.value = "";
-      currentQuery = "";
-      elSearchClr.hidden = true;
-      renderList();
-      elSearch.focus();
-    });
-  }
-
-  /* =========================================================
-     ACTIONS - Approve / Reject / Suspend
-     ========================================================= */
-  elListArea.addEventListener("click", async function (e) {
-    const btn = e.target.closest("button.btn");
-    if (!btn || btn.disabled) return;
-
-    const id = btn.getAttribute("data-id");
-    const nextStatus = btn.getAttribute("data-next");
-    const confirmMsg = btn.getAttribute("data-confirm");
-    const successMsg = btn.getAttribute("data-msg") || T("admin_msg_updated", "Updated");
-
-    if (!id || !nextStatus) return;
-
-    if (confirmMsg && !window.confirm(confirmMsg)) return;
-
-    const originalText = btn.textContent;
-    btn.disabled = true;
-    btn.textContent = T("admin_wait", "Please wait...");
-
-    const { error } = await sb
-      .from("businesses")
-      .update({ status: nextStatus })
-      .eq("id", id);
-
-    if (error) {
-      showToast(error.message || T("admin_msg_generic_error", "Kuch galat ho gaya"), "error");
-      btn.disabled = false;
-      btn.textContent = originalText;
-      return;
-    }
-
-    showToast(successMsg, "success");
-    await loadBusinesses();
-  });
-
-  /* =========================================================
-     LOGOUT
-     ========================================================= */
-  elLogout.addEventListener("click", async function () {
-    elLogout.disabled = true;
-    elLogout.textContent = T("admin_wait", "Please wait...");
-    try {
-      await sb.auth.signOut();
-    } catch (err) {
-      /* ignore and reload anyway */
-    }
-    window.location.reload();
-  });
-
-  /* =========================================================
-     LANGUAGE CHANGE
-     ========================================================= */
-  window.addEventListener("nu-lang-changed", function () {
-    renderTabs();
-    renderList();
-    applyLangSafe();
-  });
-
-  /* =========================================================
-     GO
-     ========================================================= */
-  initLangSwitcher();
-  applyLangSafe();
-  init();
-})();
-</script>
 </body>
 </html>
