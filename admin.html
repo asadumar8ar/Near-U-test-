@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Viona Bangles â€” Site Manager</title>
+<title>Viona Bangles — Site Manager</title>
 <meta name="robots" content="noindex, nofollow" />
 <meta name="theme-color" content="#14224A" />
 <link rel="icon" type="image/png" href="images/favicon.png" />
@@ -31,7 +31,8 @@
 
     <h1 class="login-title">Site Manager</h1>
     <p class="login-text">
-      Sign in with the Google account listed as an admin for this store.
+      Sign in with the admin Google account:<br />
+      <strong>vionabangles@gmail.com</strong>
     </p>
 
     <button type="button" class="btn btn-gold btn-block" id="loginGoogleBtn">
@@ -57,6 +58,9 @@
     <h1 class="login-title">You do not have access</h1>
     <p class="login-text">
       This Google account is not an admin for Viona Bangles.
+    </p>
+    <p class="login-text">
+      Please sign in with <strong>vionabangles@gmail.com</strong> instead.
     </p>
     <p class="login-text" id="deniedEmail"></p>
     <button type="button" class="btn btn-gold btn-block" id="deniedSignOut">Sign out</button>
@@ -88,7 +92,7 @@
     </nav>
 
     <div class="sidebar-foot">
-      <a class="sidebar-link" href="index.html" target="_blank" rel="noopener">View Site â†—</a>
+      <a class="sidebar-link" href="index.html" target="_blank" rel="noopener">View Site ↗</a>
       <button type="button" class="sidebar-signout" id="signOutBtn">Sign out</button>
     </div>
   </aside>
@@ -117,7 +121,7 @@
     <!-- Who is signed in -->
     <div class="who-bar">
       <span class="who-label">Signed in as</span>
-      <span class="who-name" id="whoName">â€”</span>
+      <span class="who-name" id="whoName">—</span>
     </div>
 
     <!-- ===================================================================
@@ -133,7 +137,7 @@
       </header>
 
       <div class="list-block" id="productsList">
-        <p class="loading-line">Loading productsâ€¦</p>
+        <p class="loading-line">Loading products…</p>
       </div>
     </section>
 
@@ -150,7 +154,7 @@
       </header>
 
       <div class="list-block" id="offersList">
-        <p class="loading-line">Loading messagesâ€¦</p>
+        <p class="loading-line">Loading messages…</p>
       </div>
     </section>
 
@@ -171,7 +175,7 @@
       </header>
 
       <div class="list-block" id="reviewsList">
-        <p class="loading-line">Loading reviewsâ€¦</p>
+        <p class="loading-line">Loading reviews…</p>
       </div>
     </section>
 
@@ -201,7 +205,7 @@
           </label>
           <label class="field">
             <span>Email</span>
-            <input type="email" id="setEmail" class="input" />
+            <input type="email" id="setEmail" class="input" value="vionabangles@gmail.com" />
           </label>
           <label class="field">
             <span>Phone (optional)</span>
@@ -277,15 +281,15 @@
         <div class="grid-3">
           <label class="field">
             <span>Instagram URL</span>
-            <input type="url" id="setInstagram" class="input" placeholder="https://instagram.com/â€¦" />
+            <input type="url" id="setInstagram" class="input" placeholder="https://instagram.com/…" />
           </label>
           <label class="field">
             <span>Facebook URL</span>
-            <input type="url" id="setFacebook" class="input" placeholder="https://facebook.com/â€¦" />
+            <input type="url" id="setFacebook" class="input" placeholder="https://facebook.com/…" />
           </label>
           <label class="field">
             <span>YouTube URL</span>
-            <input type="url" id="setYoutube" class="input" placeholder="https://youtube.com/â€¦" />
+            <input type="url" id="setYoutube" class="input" placeholder="https://youtube.com/…" />
           </label>
         </div>
 
@@ -308,7 +312,7 @@
       </header>
 
       <div class="list-block" id="faqList">
-        <p class="loading-line">Loading FAQsâ€¦</p>
+        <p class="loading-line">Loading FAQs…</p>
       </div>
     </section>
 
@@ -321,7 +325,7 @@
 <div class="modal" id="productModal" hidden>
   <div class="modal-backdrop" data-close="productModal"></div>
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
-    <button type="button" class="modal-close" data-close="productModal" aria-label="Close">Ã—</button>
+    <button type="button" class="modal-close" data-close="productModal" aria-label="Close">×</button>
 
     <h2 class="modal-title" id="productModalTitle">Edit Product</h2>
     <p class="modal-sub" id="productModalSub">Fill in the details below.</p>
@@ -409,7 +413,7 @@
 <div class="modal" id="offerModal" hidden>
   <div class="modal-backdrop" data-close="offerModal"></div>
   <div class="modal-panel modal-panel-wide" role="dialog" aria-modal="true" aria-labelledby="offerModalTitle">
-    <button type="button" class="modal-close" data-close="offerModal" aria-label="Close">Ã—</button>
+    <button type="button" class="modal-close" data-close="offerModal" aria-label="Close">×</button>
 
     <h2 class="modal-title" id="offerModalTitle">Edit Message</h2>
     <p class="modal-sub">Pick a display type and write any message you like.</p>
@@ -529,7 +533,7 @@
 <div class="modal" id="faqModal" hidden>
   <div class="modal-backdrop" data-close="faqModal"></div>
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="faqModalTitle">
-    <button type="button" class="modal-close" data-close="faqModal" aria-label="Close">Ã—</button>
+    <button type="button" class="modal-close" data-close="faqModal" aria-label="Close">×</button>
 
     <h2 class="modal-title" id="faqModalTitle">Edit Question</h2>
 
