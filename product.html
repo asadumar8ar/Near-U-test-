@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Product â€” Viona Bangles</title>
+<meta name="description" content="Viona Bangles â€” premium handcrafted glass and traditional bangles from Gaya, Bihar." />
+<meta name="theme-color" content="#14224A" />
+<link rel="icon" type="image/png" href="images/favicon.png" />
+<link rel="apple-touch-icon" href="images/favicon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/ui-upgrade.css" />
+</head>
+<body>
+<div id="offerStripRoot" class="offer-strip-root" aria-live="polite"></div>
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a class="brand" href="index.html" aria-label="Viona Bangles home">
+      <img src="images/logo-gold.png" alt="Viona Bangles" class="wordmark-img header-logo" id="headerLogo"
+           onerror="this.style.display='none';var f=document.getElementById('headerLogoFallback');if(f){f.hidden=false;}" />
+      <span class="brand-fallback" id="headerLogoFallback" hidden>Viona</span>
+    </a>
+    <button class="hamburger" id="hamburgerBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="headerNav">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="search-wrap" id="searchWrap">
+      <form class="search-form" id="searchForm" role="search" autocomplete="off">
+        <span class="search-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="16.5" y1="16.5" x2="21" y2="21"></line></svg>
+        </span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search bangles, categoriesâ€¦" aria-label="Search bangles" aria-autocomplete="list" aria-controls="searchSuggest" aria-expanded="false" />
+        <button type="button" class="search-clear" id="searchClear" aria-label="Clear search" hidden>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>
+        </button>
+      </form>
+      <div class="search-suggest" id="searchSuggest" role="listbox" hidden></div>
+    </div>
+    <nav class="header-nav" id="headerNav" aria-label="Main navigation">
+      <a href="index.html#collections" class="nav-link" data-nav-close>Collections</a>
+      <a href="index.html#contact" class="nav-link" data-nav-close>Contact</a>
+      <a class="nav-wa" id="headerWhatsApp" href="#" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="pdp-wrap" id="pdpRoot">
+  <div class="container">
+    <nav class="pdp-crumb" aria-label="Breadcrumb">
+      <a href="index.html">Home</a><span aria-hidden="true">/</span>
+      <a href="index.html#collections">Collections</a><span aria-hidden="true">/</span>
+      <span id="pdpCrumbName">Product</span>
+    </nav>
+    <a class="pdp-back" href="index.html#collections">â† All bangles</a>
+    <div class="pdp-missing" id="pdpMissing" hidden>
+      <h1>Product not found</h1>
+      <p>This bangle is not in the collection, or the link is out of date.</p>
+      <a class="btn btn-gold" href="index.html#collections">Back to collections</a>
+    </div>
+    <div class="pdp-panel" id="pdpPanel">
+      <div class="modal-body">
+        <div class="modal-gallery">
+          <div class="gallery-main">
+            <img id="galleryMainImg" src="" alt="" />
+            <div class="gallery-placeholder" id="galleryPlaceholder" hidden>Viona</div>
+            <span class="gallery-badge" id="galleryBadge" hidden></span>
+          </div>
+          <div class="gallery-thumbs" id="galleryThumbs"></div>
+        </div>
+        <div class="modal-info">
+          <p class="modal-code" id="modalCode"></p>
+          <h1 class="modal-title" id="modalTitle"></h1>
+          <button class="modal-rating" id="modalRating" type="button" hidden>
+            <span class="stars" id="modalStars" aria-hidden="true"></span>
+            <span class="modal-rating-text" id="modalRatingText"></span>
+          </button>
+          <div class="modal-price" id="modalPrice"></div>
+          <p class="modal-desc" id="modalDesc"></p>
+          <div class="modal-sizes" id="modalSizesWrap">
+            <p class="field-label">Select size</p>
+            <div class="size-chips" id="modalSizes" role="radiogroup" aria-label="Bangle size"></div>
+            <p class="size-hint">Not sure? Message us on WhatsApp with a photo of your fit.</p>
+          </div>
+          <div class="modal-actions">
+            <a href="#" id="modalWhatsApp" class="btn btn-whatsapp" target="_blank" rel="noopener">Order on WhatsApp</a>
+          </div>
+          <div class="modal-tabs" role="tablist" aria-label="Product information">
+            <button class="tab-btn is-active" id="tabBtnDetails" type="button" role="tab" aria-selected="true" aria-controls="tabDetails">Details</button>
+            <button class="tab-btn" id="tabBtnReviews" type="button" role="tab" aria-selected="false" aria-controls="tabReviews">Reviews <span class="tab-count" id="tabReviewCount"></span></button>
+          </div>
+          <div class="tab-panel" id="tabDetails" role="tabpanel"><div class="detail-rows" id="detailRows"></div></div>
+          <div class="tab-panel" id="tabReviews" role="tabpanel" hidden>
+            <div class="user-chip" id="userChip" hidden>
+              <img class="user-chip-avatar" id="userChipAvatar" src="" alt="" />
+              <span class="user-chip-letter" id="userChipLetter" hidden></span>
+              <span class="user-chip-name" id="userChipName"></span>
+              <button class="user-chip-out" id="userChipSignOut" type="button">Sign out</button>
+            </div>
+            <div class="reviews-summary" id="reviewsSummary">
+              <div class="reviews-summary-left">
+                <p class="reviews-average" id="reviewsAverage">0.0</p>
+                <p class="reviews-average-label">out of 5</p>
+                <span class="stars stars-lg" id="reviewsAverageStars" aria-hidden="true"></span>
+                <p class="reviews-total" id="reviewsTotal">0 reviews</p>
+              </div>
+              <div class="reviews-bars" id="reviewsBars"></div>
+            </div>
+            <div class="reviews-toolbar" id="reviewsToolbar" hidden>
+              <label class="sort-label" for="reviewSort">Sort by</label>
+              <select id="reviewSort" class="sort-select">
+                <option value="newest">Newest</option>
+                <option value="highest">Highest rating</option>
+                <option value="lowest">Lowest rating</option>
+              </select>
+            </div>
+            <div class="reviews-list" id="reviewsList"></div>
+            <p class="reviews-empty" id="reviewsEmpty" hidden>No reviews yet. Be the first to share your thoughts.</p>
+            <div class="review-form-wrap" id="reviewFormWrap"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <img src="images/logo-gold.png" alt="Viona Bangles" class="wordmark-img footer-logo" id="footerLogo"
+           onerror="this.style.display='none';var f=document.getElementById('footerLogoFallback');if(f){f.hidden=false;}" />
+      <span class="brand-fallback" id="footerLogoFallback" hidden>Viona</span>
+      <p class="footer-tagline">ELEGANT BANGLES</p>
+      <p class="footer-sub">Made for You</p>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Explore</h4>
+      <a href="index.html#collections" class="footer-link">Collections</a>
+      <a href="index.html#about" class="footer-link">About Us</a>
+      <a href="index.html#faq" class="footer-link">FAQ</a>
+      <a href="index.html#contact" class="footer-link">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-heading">Reach Us</h4>
+      <p class="footer-line" id="footerCity">Gaya, Bihar</p>
+      <p class="footer-line" id="footerHours">10:00 AM - 7:00 PM</p>
+      <a class="footer-link" id="footerEmail" href="mailto:vionabangles@gmail.com">vionabangles@gmail.com</a>
+      <a class="footer-link" id="footerWhatsApp" href="#" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>Â© <span id="footerYear">2026</span> Viona Bangles. All rights reserved.</p></div></div>
+</footer>
+
+<div class="pdp-sticky" id="pdpSticky" hidden>
+  <div class="pdp-sticky-info">
+    <p class="pdp-sticky-name" id="pdpStickyName"></p>
+    <p class="pdp-sticky-price" id="pdpStickyPrice"></p>
+  </div>
+  <a href="#" id="pdpStickyWa" class="btn btn-whatsapp" target="_blank" rel="noopener">Order on WhatsApp</a>
+</div>
+<div class="lightbox" id="lightbox" hidden>
+  <div class="lightbox-backdrop" data-lb-close></div>
+  <button class="lightbox-close" id="lbClose" type="button" aria-label="Close viewer">Ã—</button>
+  <button class="lightbox-arrow prev" id="lbPrev" type="button" aria-label="Previous photo">â€¹</button>
+  <img class="lightbox-img" id="lbImg" src="" alt="Review photo" />
+  <button class="lightbox-arrow next" id="lbNext" type="button" aria-label="Next photo">â€º</button>
+  <p class="lightbox-counter" id="lbCounter"></p>
+</div>
+<div id="popupRoot" class="popup-root"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
